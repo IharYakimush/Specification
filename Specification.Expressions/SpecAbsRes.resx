@@ -124,7 +124,13 @@
     <value>Only {0} multiplicity is allowed for value</value>
   </data>
   <data name="ValueSpecificationNullNotAllowed" xml:space="preserve">
-    <value>Value type {0} not allowed</value>
+    <value>Null value type not allowed</value>
+  </data>
+  <data name="ValueSpecificationZeroCount" xml:space="preserve">
+    <value>At least one value should be provided</value>
+  </data>
+  <data name="ValueSpecificationMixedTypes" xml:space="preserve">
+    <value>All values should have the same type</value>
   </data>
   <data name="ValueSpecificationValuesNotProvided" xml:space="preserve">
     <value>Values were not provided</value>
@@ -134,5 +140,35 @@
   </data>
   <data name="ValueSpecificationMultipleValuesProvided" xml:space="preserve">
     <value>Single value expected, however {0} values were provided</value>
+  </data>
+  <data name="SpecificationValueTypeNotSupported" xml:space="preserve">
+    <value>Value of type {0} not supported. List of supported types: {1}</value>
+  </data>
+  <data name="KeyValueSpecificationMissingKey" xml:space="preserve">
+    <value>Key {0} is missing</value>
+  </data>
+  <data name="KeyValueSpecificationTypeNotSupported" xml:space="preserve">
+    <value>Value of type {0} for key {1} can't be converted to {2}</value>
+  </data>
+  <data name="KeyValueSpecificationTypeNotMatch" xml:space="preserve">
+    <value>Value of type {0} for key {1} can't be compared with type {2}</value>
+  </data>
+  <data name="KeyValueSpecificationValueNull" xml:space="preserve">
+    <value>Value for key {0} is null</value>
+  </data>
+  <data name="CompareSpecificationNotMatch" xml:space="preserve">
+    <value>Not {0} values for {1}</value>
+  </data>
+  <data name="CompareSpecificationToString" xml:space="preserve">
+    <value>{0} {1} {2}</value>
+  </data>
+  <data name="SpecificationValueAnyOf" xml:space="preserve">
+    <value>Any of ({0})</value>
+  </data>
+  <data name="SpecificationValueAllOf" xml:space="preserve">
+    <value>All of ({0})</value>
+  </data>
+  <data name="EqualSpecificationName" xml:space="preserve">
+    <value>equal</value>
   </data>
 </root>

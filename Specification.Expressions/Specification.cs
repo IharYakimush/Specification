@@ -5,9 +5,6 @@
 
     public abstract class Specification
     {
-        public SpecificationResult Evaluate(IReadOnlyDictionary<string, string> values)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract SpecificationResult Evaluate(IReadOnlyDictionary<string, object> values);
     }
 }

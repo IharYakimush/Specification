@@ -61,11 +61,101 @@ namespace Specification.Expressions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not {0} values for {1}.
+        /// </summary>
+        internal static string CompareSpecificationNotMatch {
+            get {
+                return ResourceManager.GetString("CompareSpecificationNotMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} {1} {2}.
+        /// </summary>
+        internal static string CompareSpecificationToString {
+            get {
+                return ResourceManager.GetString("CompareSpecificationToString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Minimum {0} specifications expected.
         /// </summary>
         internal static string CompositeSpecificationMinimum {
             get {
                 return ResourceManager.GetString("CompositeSpecificationMinimum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to equal.
+        /// </summary>
+        internal static string EqualSpecificationName {
+            get {
+                return ResourceManager.GetString("EqualSpecificationName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Key {0} is missing.
+        /// </summary>
+        internal static string KeyValueSpecificationMissingKey {
+            get {
+                return ResourceManager.GetString("KeyValueSpecificationMissingKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value of type {0} for key {1} can&apos;t be compared with type {2}.
+        /// </summary>
+        internal static string KeyValueSpecificationTypeNotMatch {
+            get {
+                return ResourceManager.GetString("KeyValueSpecificationTypeNotMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value of type {0} for key {1} can&apos;t be converted to {2}.
+        /// </summary>
+        internal static string KeyValueSpecificationTypeNotSupported {
+            get {
+                return ResourceManager.GetString("KeyValueSpecificationTypeNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value for key {0} is null.
+        /// </summary>
+        internal static string KeyValueSpecificationValueNull {
+            get {
+                return ResourceManager.GetString("KeyValueSpecificationValueNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All of ({0}).
+        /// </summary>
+        internal static string SpecificationValueAllOf {
+            get {
+                return ResourceManager.GetString("SpecificationValueAllOf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Any of ({0}).
+        /// </summary>
+        internal static string SpecificationValueAnyOf {
+            get {
+                return ResourceManager.GetString("SpecificationValueAnyOf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value of type {0} not supported. List of supported types: {1}.
+        /// </summary>
+        internal static string SpecificationValueTypeNotSupported {
+            get {
+                return ResourceManager.GetString("SpecificationValueTypeNotSupported", resourceCulture);
             }
         }
         
@@ -80,6 +170,15 @@ namespace Specification.Expressions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All values should have the same type.
+        /// </summary>
+        internal static string ValueSpecificationMixedTypes {
+            get {
+                return ResourceManager.GetString("ValueSpecificationMixedTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Single value expected, however {0} values were provided.
         /// </summary>
         internal static string ValueSpecificationMultipleValuesProvided {
@@ -89,7 +188,7 @@ namespace Specification.Expressions {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Value type {0} not allowed.
+        ///   Looks up a localized string similar to Null value type not allowed.
         /// </summary>
         internal static string ValueSpecificationNullNotAllowed {
             get {
@@ -112,6 +211,15 @@ namespace Specification.Expressions {
         internal static string ValueSpecificationValuesNotProvided {
             get {
                 return ResourceManager.GetString("ValueSpecificationValuesNotProvided", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to At least one value should be provided.
+        /// </summary>
+        internal static string ValueSpecificationZeroCount {
+            get {
+                return ResourceManager.GetString("ValueSpecificationZeroCount", resourceCulture);
             }
         }
     }
