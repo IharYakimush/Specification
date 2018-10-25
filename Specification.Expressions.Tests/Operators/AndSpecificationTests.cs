@@ -1,5 +1,6 @@
 ﻿namespace Specification.Expressions.Tests
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
 
@@ -34,6 +35,13 @@
             SpecificationResult result = and.Evaluate(new Dictionary<string, object>(), false);
             Assert.False(result.IsSatisfied);
             Assert.Null(result.Details);
+        }
+
+        [Fact]
+        public void AndMinCount()
+        {
+            Assert.Throws<ArgumentException>(() => new AndSpecification());
+            Assert.Throws<ArgumentException>(() => new AndSpecification(ConstantSpecification.True));
         }
     }
 }

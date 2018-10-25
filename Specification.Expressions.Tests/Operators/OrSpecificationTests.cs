@@ -1,5 +1,6 @@
 ﻿namespace Specification.Expressions.Tests
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
 
@@ -49,6 +50,13 @@
             SpecificationResult result = or.Evaluate(new Dictionary<string, object>(), false);
             Assert.False(result.IsSatisfied);
             Assert.Null(result.Details);
+        }
+
+        [Fact]
+        public void OrMinCount()
+        {
+            Assert.Throws<ArgumentException>(() => new OrSpecification());
+            Assert.Throws<ArgumentException>(() => new OrSpecification(ConstantSpecification.True));
         }
     }
 }
