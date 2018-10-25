@@ -11,16 +11,20 @@
         {
         }
 
-        protected override SpecificationResult CompareSafeTypes(SpecificationValue left, SpecificationValue right)
+        protected override SpecificationResult CompareSafeTypes(SpecificationValue left, SpecificationValue right, bool includeDetails = true)
         {
             bool result = this.ApplyMultiplicity(
                 left.Values,
                 l => this.ApplyMultiplicity(right.Values, r => this.CompareSingleValues(l, r), right),
                 left);
 
-            return new SpecificationResult(
+            return SpecificationResult.Create(
                 result,
-                result ? null : string.Format(SpecAbsRes.CompareSpecificationNotMatch, left, this));
+                result 
+                    ? null 
+                    : includeDetails 
+                        ? string.Format(SpecAbsRes.CompareSpecificationNotMatch, left, this) 
+                        : null);
         }
 
         private bool ApplyMultiplicity(IEnumerable<object> objects, Func<object, bool> func, SpecificationValue value)

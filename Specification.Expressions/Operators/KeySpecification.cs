@@ -7,7 +7,7 @@
     {
         public string Key { get; }
 
-        public KeySpecification(string key)
+        protected KeySpecification(string key)
         {
             this.Key = key ?? throw new ArgumentNullException(nameof(key));
         }

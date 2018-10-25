@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     public abstract class CompositeSpecification : Specification
     {
@@ -9,14 +10,21 @@
 
         public IReadOnlyCollection<Specification> Specifications { get; private set; }
 
-        protected CompositeSpecification(IReadOnlyCollection<Specification> specifications)
+        protected CompositeSpecification(IEnumerable<Specification> specifications)
         {
-            this.Specifications = specifications ?? throw new ArgumentNullException(nameof(specifications));
+            this.Specifications = specifications.ToArray() ?? throw new ArgumentNullException(nameof(specifications));
 
-            if (specifications.Count < MinCount)
+            if (this.Specifications.Count < MinCount)
             {
                 throw new ArgumentException(string.Format(SpecAbsRes.CompositeSpecificationMinimum, MinCount), nameof(specifications));
             }
+        }
+
+        protected abstract string OperatorName { get; }
+
+        public override string ToString()
+        {
+            return $"({string.Join($" {this.OperatorName} ", this.Specifications)})";
         }
     }
 }

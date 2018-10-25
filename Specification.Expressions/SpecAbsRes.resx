@@ -157,7 +157,7 @@
     <value>Value for key {0} is null</value>
   </data>
   <data name="CompareSpecificationNotMatch" xml:space="preserve">
-    <value>Not {0} values for {1}</value>
+    <value>{0} value(s) not satisfied {1}</value>
   </data>
   <data name="CompareSpecificationToString" xml:space="preserve">
     <value>{0} {1} {2}</value>
@@ -170,5 +170,20 @@
   </data>
   <data name="EqualSpecificationName" xml:space="preserve">
     <value>equal</value>
+  </data>
+  <data name="ConstantSpecificationFalse" xml:space="preserve">
+    <value>Constant false</value>
+  </data>
+  <data name="AndSpecificationName" xml:space="preserve">
+    <value>and</value>
+  </data>
+  <data name="OrSpecificationName" xml:space="preserve">
+    <value>or</value>
+  </data>
+  <data name="AndNotMatch" xml:space="preserve">
+    <value>and[{0}]/{1}</value>
+  </data>
+  <data name="OrNotMatch" xml:space="preserve">
+    <value>or/({0})</value>
   </data>
 </root>

@@ -17,6 +17,7 @@
             Assert.Single(value.Values, 23);
             Assert.Equal(SpecificationValue.Multiplicity.AllOf, value.ValueMultiplicity);
             Assert.Equal(SpecificationValue.DataType.Int, value.ValueType);
+            Assert.Equal("23", value.ToString());
         }
 
         [Fact]
@@ -69,6 +70,7 @@
             Assert.Collection(value.Values.OfType<int>(), i => Assert.Equal(1, i), i => Assert.Equal(2, i), i => Assert.Equal(4, i));
             Assert.Equal(SpecificationValue.Multiplicity.AnyOf, value.ValueMultiplicity);
             Assert.Equal(SpecificationValue.DataType.Int, value.ValueType);
+            Assert.Equal("Any of (1, 2, 4)", value.ToString());
         }
 
         [Fact]
@@ -80,6 +82,7 @@
             Assert.Collection(value.Values.OfType<int>(), i => Assert.Equal(1, i), i => Assert.Equal(2, i), i => Assert.Equal(4, i));
             Assert.Equal(SpecificationValue.Multiplicity.AllOf, value.ValueMultiplicity);
             Assert.Equal(SpecificationValue.DataType.Int, value.ValueType);
+            Assert.Equal("All of (1, 2, 4)", value.ToString());
         }
     }
 }

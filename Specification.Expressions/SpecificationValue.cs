@@ -19,7 +19,28 @@
             SetType(value.GetType(), result, nameof(value));
 
             return result;
-        }        
+        }
+
+        public static SpecificationValue AnyOf<TValue>(params TValue[] values)
+        {
+            // Workaround for incorrect default params binding
+            if (values.Length == 1 && values[0] is IEnumerable en)
+            {
+                return AnyOf(en);
+            }
+
+            return AnyOf((IEnumerable)values);
+        }
+        public static SpecificationValue AllOf<TValue>(params TValue[] values)
+        {
+            // Workaround for incorrect default params binding
+            if (values.Length == 1 && values[0] is IEnumerable en)
+            {
+                return AllOf(en);
+            }
+
+            return AllOf((IEnumerable)values);
+        }
 
         public static SpecificationValue AnyOf(IEnumerable values)
         {

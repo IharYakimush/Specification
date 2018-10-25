@@ -61,7 +61,25 @@ namespace Specification.Expressions {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Not {0} values for {1}.
+        ///   Looks up a localized string similar to and[{0}]/{1}.
+        /// </summary>
+        internal static string AndNotMatch {
+            get {
+                return ResourceManager.GetString("AndNotMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to and.
+        /// </summary>
+        internal static string AndSpecificationName {
+            get {
+                return ResourceManager.GetString("AndSpecificationName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} value(s) not satisfied {1}.
         /// </summary>
         internal static string CompareSpecificationNotMatch {
             get {
@@ -84,6 +102,15 @@ namespace Specification.Expressions {
         internal static string CompositeSpecificationMinimum {
             get {
                 return ResourceManager.GetString("CompositeSpecificationMinimum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Constant false.
+        /// </summary>
+        internal static string ConstantSpecificationFalse {
+            get {
+                return ResourceManager.GetString("ConstantSpecificationFalse", resourceCulture);
             }
         }
         
@@ -129,6 +156,24 @@ namespace Specification.Expressions {
         internal static string KeyValueSpecificationValueNull {
             get {
                 return ResourceManager.GetString("KeyValueSpecificationValueNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to or/({0}).
+        /// </summary>
+        internal static string OrNotMatch {
+            get {
+                return ResourceManager.GetString("OrNotMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to or.
+        /// </summary>
+        internal static string OrSpecificationName {
+            get {
+                return ResourceManager.GetString("OrSpecificationName", resourceCulture);
             }
         }
         

@@ -1,10 +1,8 @@
-﻿namespace Specification.Expressions
+﻿namespace Specification.Expressions.Operators
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
-
-    using global::Specification.Expressions.Operators;
 
     public abstract class KeyValueSpecification : KeySpecification
     {
@@ -15,35 +13,37 @@
 
         public SpecificationValue Value { get; private set; }
 
-        public override SpecificationResult Evaluate(IReadOnlyDictionary<string, object> values)
+        public override SpecificationResult Evaluate(IReadOnlyDictionary<string, object> values, bool includeDetails = true)
         {
             if (!values.ContainsKey(this.Key))
             {
-                return new SpecificationResult(false, string.Format(SpecAbsRes.KeyValueSpecificationMissingKey, this.Key));
+                return SpecificationResult.Create(
+                    false,
+                    includeDetails ? string.Format(SpecAbsRes.KeyValueSpecificationMissingKey, this.Key) : null);
             }
 
             object value = values[this.Key];
 
             if (value == null)
             {
-                return new SpecificationResult(
+                return SpecificationResult.Create(
                     false,
-                    string.Format(SpecAbsRes.KeyValueSpecificationValueNull, this.Key));
+                    includeDetails ? string.Format(SpecAbsRes.KeyValueSpecificationValueNull, this.Key) : null);
             }
 
             Type type = value.GetType();
 
             if (value is SpecificationValue sv)
             {
-                return Compare(sv, this.Value);
+                return this.Compare(sv, this.Value, includeDetails);
             }
             else if (TypeHelper.Mapping.ContainsKey(type))
             {
-                return Compare(SpecificationValue.Single(value), this.Value);
+                return this.Compare(SpecificationValue.Single(value), this.Value, includeDetails);
             }
-            else if (type is IEnumerable en)
+            else if (value is IEnumerable en)
             {
-                return Compare(SpecificationValue.AnyOf(en), this.Value);
+                return this.Compare(SpecificationValue.AnyOf(en), this.Value, includeDetails);
             }
 
             throw new ArgumentException(
@@ -54,17 +54,23 @@
                     typeof(SpecificationValue)));
         }
 
-        protected SpecificationResult Compare(SpecificationValue left, SpecificationValue rigth)
+        protected SpecificationResult Compare(SpecificationValue left, SpecificationValue rigth, bool includeDetails = true)
         {
             if (left.ValueType == rigth.ValueType)
             {
-                return CompareSafeTypes(left, rigth);
+                return this.CompareSafeTypes(left, rigth, includeDetails);
             }
 
-            return new SpecificationResult(
+            return SpecificationResult.Create(
                 false,
-                string.Format(SpecAbsRes.KeyValueSpecificationTypeNotMatch, left.ValueType, this.Key, rigth.ValueType));
+                includeDetails
+                    ? string.Format(
+                        SpecAbsRes.KeyValueSpecificationTypeNotMatch,
+                        left.ValueType,
+                        this.Key,
+                        rigth.ValueType)
+                    : null);
         }
-        protected abstract SpecificationResult CompareSafeTypes(SpecificationValue left, SpecificationValue right);
+        protected abstract SpecificationResult CompareSafeTypes(SpecificationValue left, SpecificationValue right, bool includeDetails = true);
     }
 }
