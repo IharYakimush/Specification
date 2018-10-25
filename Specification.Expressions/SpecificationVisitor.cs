@@ -36,7 +36,18 @@
                 return hv;
             }
 
+            if (value is NotSpecification not)
+            {
+                not = this.VisitNot(not);
+                return not;
+            }
+
             throw new InvalidOperationException();
+        }
+
+        public virtual NotSpecification VisitNot(NotSpecification not)
+        {
+            return new NotSpecification(this.Visit(not.Specification));
         }
 
         public virtual HasValueSpecification VisitHasValue(HasValueSpecification hv)

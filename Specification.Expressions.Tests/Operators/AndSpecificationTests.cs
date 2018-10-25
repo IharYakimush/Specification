@@ -11,6 +11,14 @@
     public class AndSpecificationTests
     {
         [Fact]
+        public void AndToString()
+        {
+            AndSpecification and = new AndSpecification(ConstantSpecification.True, ConstantSpecification.True);
+
+            Assert.Equal("(true and true)", and.ToString());
+        }
+
+        [Fact]
         public void AndTrue()
         {
             AndSpecification and = new AndSpecification(ConstantSpecification.True, ConstantSpecification.True);

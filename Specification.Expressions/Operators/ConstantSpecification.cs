@@ -21,5 +21,10 @@
         {
             return SpecificationResult.Create(this.value, includeDetails ? this.details : null);
         }
+
+        public override string ToString()
+        {
+            return this.value ? SpecAbsRes.ConstantTrueString : SpecAbsRes.ConstantFalseString;
+        }
     }
 }

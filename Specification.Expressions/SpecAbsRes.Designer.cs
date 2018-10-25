@@ -106,11 +106,29 @@ namespace Specification.Expressions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to false.
+        /// </summary>
+        internal static string ConstantFalseString {
+            get {
+                return ResourceManager.GetString("ConstantFalseString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Constant false.
         /// </summary>
         internal static string ConstantSpecificationFalse {
             get {
                 return ResourceManager.GetString("ConstantSpecificationFalse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to true.
+        /// </summary>
+        internal static string ConstantTrueString {
+            get {
+                return ResourceManager.GetString("ConstantTrueString", resourceCulture);
             }
         }
         
@@ -165,6 +183,24 @@ namespace Specification.Expressions {
         internal static string KeyValueSpecificationValueNull {
             get {
                 return ResourceManager.GetString("KeyValueSpecificationValueNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to not/{0}.
+        /// </summary>
+        internal static string NotNotMatch {
+            get {
+                return ResourceManager.GetString("NotNotMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to not ({0}).
+        /// </summary>
+        internal static string NotToString {
+            get {
+                return ResourceManager.GetString("NotToString", resourceCulture);
             }
         }
         

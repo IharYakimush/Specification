@@ -23,7 +23,8 @@
                 new OrSpecification(
                     new EqualSpecification("k3", SpecificationValue.Single(1)),
                     new EqualSpecification("k4", SpecificationValue.Single(2))),
-                new HasValueSpecification("k5"));
+                new HasValueSpecification("k5"),
+                new NotSpecification(new ConstantSpecification(false)));
 
             visitor.Visit(specification);
 
