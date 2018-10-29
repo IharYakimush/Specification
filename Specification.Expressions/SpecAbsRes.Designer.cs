@@ -151,6 +151,24 @@ namespace Specification.Expressions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to key {0} has null value.
+        /// </summary>
+        internal static string HasValueNotMatchNull {
+            get {
+                return ResourceManager.GetString("HasValueNotMatchNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to has value for {0}.
+        /// </summary>
+        internal static string HasValueToString {
+            get {
+                return ResourceManager.GetString("HasValueToString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Key {0} is missing.
         /// </summary>
         internal static string KeyValueSpecificationMissingKey {

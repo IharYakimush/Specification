@@ -28,6 +28,8 @@
 
         public static string ToXml(this Specification specification, string ns = null)
         {
+            Encoding encoding = Encoding.UTF8;
+
             using (MemoryStream ms = new MemoryStream())
             {
                 using (XmlWriter writer = XmlWriter.Create(
@@ -35,14 +37,14 @@
                     new XmlWriterSettings
                         {
                             CheckCharacters = true,
-                            Encoding = Encoding.UTF8,
+                            Encoding = encoding,
                             Indent = true
                         }))
                 {
                     specification.ToXml(writer, ns);
                 }
 
-                return Encoding.UTF8.GetString(ms.ToArray());
+                return encoding.GetString(ms.ToArray());
             }
         }
     }

@@ -195,6 +195,12 @@
   <data name="HasValueNotMatch" xml:space="preserve">
     <value>key {0} not found</value>
   </data>
+  <data name="HasValueToString" xml:space="preserve">
+    <value>has value for {0}</value>
+  </data>  
+  <data name="HasValueNotMatchNull" xml:space="preserve">
+    <value>key {0} has null value</value>
+  </data>
   <data name="NotNotMatch" xml:space="preserve">
     <value>not/{0}</value>
   </data>
