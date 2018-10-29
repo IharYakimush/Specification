@@ -40,7 +40,9 @@
         public void AndFalseWithoutDetails()
         {
             AndSpecification and = new AndSpecification(ConstantSpecification.True, ConstantSpecification.False);
-            SpecificationResult result = and.Evaluate(new Dictionary<string, object>(), false);
+            SpecificationResult result = and.Evaluate(
+                new Dictionary<string, object>(),
+                new SpecificationEvaluationSettings() { IncludeDetails = false });
             Assert.False(result.IsSatisfied);
             Assert.Null(result.Details);
         }

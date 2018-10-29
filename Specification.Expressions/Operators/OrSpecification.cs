@@ -14,19 +14,21 @@
         {
         }
 
-        public override SpecificationResult Evaluate(IReadOnlyDictionary<string, object> values, bool includeDetails = true)
+        public override SpecificationResult Evaluate(
+            IReadOnlyDictionary<string, object> values,
+            SpecificationEvaluationSettings settings)
         {
             List<string> details = new List<string>();
             foreach (Specification s in this.Specifications)
             {
-                var result = s.Evaluate(values, includeDetails);
+                var result = s.Evaluate(values, settings);
 
                 if (result.IsSatisfied)
                 {
                     return SpecificationResult.True;
                 }
 
-                if (includeDetails)
+                if (settings.IncludeDetails)
                 {
                     details.Add(result.Details);
                 }
@@ -34,7 +36,7 @@
 
             return SpecificationResult.Create(
                 false,
-                includeDetails ? string.Format(SpecAbsRes.OrNotMatch, string.Join("|", details)) : null);
+                settings.IncludeDetails ? string.Format(SpecAbsRes.OrNotMatch, string.Join("|", details)) : null);
         }
 
         protected override string OperatorName { get; } = SpecAbsRes.OrSpecificationName;

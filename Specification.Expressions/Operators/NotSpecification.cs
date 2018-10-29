@@ -11,9 +11,12 @@
         {
             this.Specification = specification ?? throw new ArgumentNullException(nameof(specification));
         }
-        public override SpecificationResult Evaluate(IReadOnlyDictionary<string, object> values, bool includeDetails = true)
+
+        public override SpecificationResult Evaluate(
+            IReadOnlyDictionary<string, object> values,
+            SpecificationEvaluationSettings settings)
         {
-            var result = this.Specification.Evaluate(values, includeDetails);
+            var result = this.Specification.Evaluate(values, settings);
 
             if (!result.IsSatisfied)
             {
@@ -22,7 +25,7 @@
 
             return SpecificationResult.Create(
                 false,
-                includeDetails ? string.Format(SpecAbsRes.NotNotMatch, this.Specification) : null);
+                settings.IncludeDetails ? string.Format(SpecAbsRes.NotNotMatch, this.Specification) : null);
         }
 
         public override string ToString()

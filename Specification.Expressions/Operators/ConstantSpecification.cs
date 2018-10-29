@@ -4,7 +4,7 @@
 
     public class ConstantSpecification : Specification
     {
-        private readonly bool value;
+        public bool Value { get; }
 
         private readonly string details;
 
@@ -12,19 +12,22 @@
 
         public static ConstantSpecification False { get; } = new ConstantSpecification(false, SpecAbsRes.ConstantSpecificationFalse);
 
-        public ConstantSpecification(bool value, string details = null)
+        private ConstantSpecification(bool value, string details = null)
         {
-            this.value = value;
+            this.Value = value;
             this.details = details;
         }
-        public override SpecificationResult Evaluate(IReadOnlyDictionary<string, object> values, bool includeDetails = true)
+
+        public override SpecificationResult Evaluate(
+            IReadOnlyDictionary<string, object> values,
+            SpecificationEvaluationSettings settings)
         {
-            return SpecificationResult.Create(this.value, includeDetails ? this.details : null);
+            return SpecificationResult.Create(this.Value, settings.IncludeDetails ? this.details : null);
         }
 
         public override string ToString()
         {
-            return this.value ? SpecAbsRes.ConstantTrueString : SpecAbsRes.ConstantFalseString;
+            return this.Value ? SpecAbsRes.ConstantTrueString : SpecAbsRes.ConstantFalseString;
         }
     }
 }

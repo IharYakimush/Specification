@@ -5,6 +5,8 @@
 
     public abstract class Specification
     {
-        public abstract SpecificationResult Evaluate(IReadOnlyDictionary<string, object> values, bool includeDetails = true);
+        public abstract SpecificationResult Evaluate(
+            IReadOnlyDictionary<string, object> values, 
+            SpecificationEvaluationSettings settings);
     }
 }

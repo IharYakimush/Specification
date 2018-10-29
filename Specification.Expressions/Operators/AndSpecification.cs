@@ -15,18 +15,20 @@
         {
         }
 
-        public override SpecificationResult Evaluate(IReadOnlyDictionary<string, object> values, bool includeDetails = true)
+        public override SpecificationResult Evaluate(
+            IReadOnlyDictionary<string, object> values,
+            SpecificationEvaluationSettings settings)
         {
             int i = 0;
             foreach (Specification s in this.Specifications)
             {
-                var result = s.Evaluate(values, includeDetails);
+                var result = s.Evaluate(values, settings);
 
                 if (!result.IsSatisfied)
                 {
                     return SpecificationResult.Create(
                         false,
-                        includeDetails ? string.Format(SpecAbsRes.AndNotMatch, i, result.Details) : null);
+                        settings.IncludeDetails ? string.Format(SpecAbsRes.AndNotMatch, i, result.Details) : null);
                 }
 
                 i++;

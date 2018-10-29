@@ -9,7 +9,9 @@
         {
         }
 
-        public override SpecificationResult Evaluate(IReadOnlyDictionary<string, object> values, bool includeDetails = true)
+        public override SpecificationResult Evaluate(
+            IReadOnlyDictionary<string, object> values,
+            SpecificationEvaluationSettings settings)
         {
             if (values.ContainsKey(this.Key))
             {
@@ -19,7 +21,7 @@
             {
                 return SpecificationResult.Create(
                     false,
-                    includeDetails ? string.Format(SpecAbsRes.HasValueNotMatch, this.Key) : null);
+                    settings.IncludeDetails ? string.Format(SpecAbsRes.HasValueNotMatch, this.Key) : null);
             }
         }
     }

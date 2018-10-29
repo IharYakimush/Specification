@@ -39,7 +39,9 @@
         public void NotFalseWithoutDetails()
         {
             NotSpecification not = new NotSpecification(ConstantSpecification.True);
-            SpecificationResult result = not.Evaluate(new Dictionary<string, object>(), false);
+            SpecificationResult result = not.Evaluate(
+                new Dictionary<string, object>(),
+                new SpecificationEvaluationSettings { IncludeDetails = false });
             Assert.False(result.IsSatisfied);
             Assert.Null(result.Details);
         }

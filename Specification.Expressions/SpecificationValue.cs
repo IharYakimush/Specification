@@ -14,7 +14,7 @@
 
             SpecificationValue result = new SpecificationValue();
             result.ValueMultiplicity = Multiplicity.AllOf;
-            result.Values = new [] { value };
+            result.Values = new[] { value };
 
             SetType(value.GetType(), result, nameof(value));
 
@@ -118,13 +118,13 @@
 
         public enum DataType
         {
+            String = 0,
+
             Int = 1,
 
             Float = 2,
 
-            DateTime = 3,
-
-            String = 4
+            DateTime = 3,            
         }
 
         public enum Multiplicity

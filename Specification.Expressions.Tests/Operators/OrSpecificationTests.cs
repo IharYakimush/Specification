@@ -47,7 +47,9 @@
         public void OrFalseWithoutDetails()
         {
             Specification or = new OrSpecification(ConstantSpecification.False, ConstantSpecification.False);
-            SpecificationResult result = or.Evaluate(new Dictionary<string, object>(), false);
+            SpecificationResult result = or.Evaluate(
+                new Dictionary<string, object>(),
+                new SpecificationEvaluationSettings { IncludeDetails = false });
             Assert.False(result.IsSatisfied);
             Assert.Null(result.Details);
         }

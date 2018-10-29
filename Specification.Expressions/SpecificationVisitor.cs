@@ -7,9 +7,10 @@
 
     public abstract class SpecificationVisitor
     {
-        public Specification Visit(Specification value)
+        public virtual Specification Visit(Specification value)
         {
             if (value == null) throw new ArgumentNullException(nameof(value));
+
             this.VisitWithoutModification(value);
 
             if (value is AndSpecification and)
@@ -24,6 +25,12 @@
                 return or;
             }
 
+            if (value is NotSpecification not)
+            {
+                not = this.VisitNot(not);
+                return not;
+            }
+
             if (value is EqualSpecification eq)
             {
                 eq = this.VisitEqual(eq);
@@ -36,13 +43,18 @@
                 return hv;
             }
 
-            if (value is NotSpecification not)
+            if (value is ConstantSpecification cs)
             {
-                not = this.VisitNot(not);
-                return not;
+                cs = this.VisitConstant(cs);
+                return cs;
             }
 
             throw new InvalidOperationException();
+        }
+
+        public virtual ConstantSpecification VisitConstant(ConstantSpecification cs)
+        {
+            return cs;
         }
 
         public virtual NotSpecification VisitNot(NotSpecification not)
