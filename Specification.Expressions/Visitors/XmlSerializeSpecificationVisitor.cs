@@ -93,14 +93,14 @@
 
             if (value.Values.Count > 1)
             {
-                foreach (object v in value.Values)
+                for (int i = 0; i < value.Values.Count; i++)
                 {
-                    this.XmlWriter.WriteElementString("v", v.ToString());
-                }
+                    this.XmlWriter.WriteElementString("v", value.Serialize(i));
+                }                
             }
             else
             {
-                this.XmlWriter.WriteAttributeString("v", value.Values.Single().ToString());
+                this.XmlWriter.WriteAttributeString("v", value.Serialize());
             }
         }
     }
