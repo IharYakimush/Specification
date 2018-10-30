@@ -53,6 +53,7 @@
             {
                 throw new ArgumentException(SpecAbsRes.ValueSpecificationZeroCount, nameof(values));
             }
+
             result.Values = resultValues;
             Type type = null;
 

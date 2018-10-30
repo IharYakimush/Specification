@@ -1,5 +1,6 @@
 ﻿namespace Specification.Expressions.Tests
 {
+    using System;
     using System.Collections.Generic;
 
     using global::Specification.Expressions.Operators;
@@ -138,6 +139,79 @@
                 result,
                 specification.Evaluate(new Dictionary<string, object> { { "key", SpecificationValue.AnyOf(l1, l2) } })
                     .IsSatisfied);
+        }
+
+        [Theory]
+        [InlineData(1, true, true, true, false)]
+        [InlineData(3, true, true, false, false)]
+        [InlineData(1, false, false, false, false)]
+        [InlineData(1, false, true, true, true)]
+        public void CastIntString(int value, bool allowCast, bool throwCastException, bool result, bool expectException)
+        {
+            EqualSpecification specification = new EqualSpecification("key", SpecificationValue.AnyOf("1", "2"));
+
+            SpecificationEvaluationSettings settings =
+                new SpecificationEvaluationSettings
+                    {
+                        IncludeDetails = true,
+                        AllowCast = allowCast,
+                        ThrowCastErrors = throwCastException
+                    };
+            Dictionary<string, object> values = new Dictionary<string, object> { { "key", value } };
+
+            if (expectException)
+            {
+                Assert.Throws<ArgumentException>(() => specification.Evaluate(values, settings));
+            }
+            else
+            {
+                var res = specification.Evaluate(values, settings);
+
+                Assert.Equal(result, res.IsSatisfied);
+            }
+        }
+
+        [Theory]
+        [InlineData(1, true, true, true, false)]
+        [InlineData(3, true, true, false, false)]
+        [InlineData(1, false, false, false, false)]
+        [InlineData(1, false, true, true, true)]
+        public void CastIntArrayString(int value, bool allowCast, bool throwCastException, bool result, bool expectException)
+        {
+            EqualSpecification specification = new EqualSpecification("key", SpecificationValue.AnyOf("1", "2"));
+
+            SpecificationEvaluationSettings settings =
+                new SpecificationEvaluationSettings
+                    {
+                        IncludeDetails = true,
+                        AllowCast = allowCast,
+                        ThrowCastErrors = throwCastException
+                    };
+            Dictionary<string, object> values =
+                new Dictionary<string, object> { { "key", new List<int> { value, 123 } } };
+
+            if (expectException)
+            {
+                var ae = Assert.Throws<ArgumentException>(() => specification.Evaluate(values, settings));
+                Assert.Contains("can't be compared with type", ae.Message);
+            }
+            else
+            {
+                var res = specification.Evaluate(values, settings);
+
+                Assert.Equal(result, res.IsSatisfied);
+            }
+        }
+
+        [Fact]
+        public void CastUnsupportedType()
+        {
+            EqualSpecification specification = new EqualSpecification("key", SpecificationValue.AnyOf("1", "2"));
+            Dictionary<string, object> values =
+                new Dictionary<string, object> { { "key", new List<TimeSpan> { TimeSpan.FromDays(1) } } };
+
+            var ae = Assert.Throws<ArgumentException>(() => specification.Evaluate(values));
+            Assert.Contains("can't be converted to", ae.Message);
         }
     }
 }
