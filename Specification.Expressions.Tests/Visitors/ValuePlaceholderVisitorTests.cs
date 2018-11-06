@@ -32,6 +32,28 @@
         }
 
         [Fact]
+        public void ReplaceStringArray()
+        {
+            EqualSpecification equal = new EqualSpecification(
+                "k1",
+                SpecificationValue.Ref("{p1}", SpecificationValue.DataType.String));
+
+            ValuePlaceholderVisitor visitor =
+                new ValuePlaceholderVisitor(new Dictionary<string, object> { { "{p1}", new[] { "v1", "v2" } } });
+
+            Specification result = visitor.Visit(equal);
+
+            var r = Assert.IsType<EqualSpecification>(result);
+            Assert.NotSame(equal, r);
+            Assert.Contains("v1", r.Value.Values);
+            Assert.DoesNotContain("{p1}", r.Value.Values);
+            Assert.Equal(equal.Key, r.Key);
+            Assert.Equal(equal.Value.ValueMultiplicity, r.Value.ValueMultiplicity);
+            Assert.Equal(equal.Value.ValueType, r.Value.ValueType);
+        }
+
+
+        [Fact]
         public void ReplaceSpecification()
         {
             EqualSpecification equal = new EqualSpecification(
@@ -46,6 +68,28 @@
             var r = Assert.IsType<EqualSpecification>(result);
             Assert.NotSame(equal, r);
             Assert.Contains("v1", r.Value.Values);
+            Assert.DoesNotContain("{p1}", r.Value.Values);
+            Assert.Equal(equal.Key, r.Key);
+            Assert.Equal(equal.Value.ValueMultiplicity, r.Value.ValueMultiplicity);
+            Assert.Equal(equal.Value.ValueType, r.Value.ValueType);
+        }
+
+        [Fact]
+        public void ReplaceMultivalueSpecification()
+        {
+            EqualSpecification equal = new EqualSpecification(
+                "k1",
+                SpecificationValue.Ref("{p1}", SpecificationValue.DataType.String));
+
+            ValuePlaceholderVisitor visitor = new ValuePlaceholderVisitor(
+                new Dictionary<string, object> { { "{p1}", SpecificationValue.AnyOf("v1", "v2") } });
+
+            Specification result = visitor.Visit(equal);
+
+            var r = Assert.IsType<EqualSpecification>(result);
+            Assert.NotSame(equal, r);
+            Assert.Contains("v1", r.Value.Values);
+            Assert.Contains("v2", r.Value.Values);
             Assert.DoesNotContain("{p1}", r.Value.Values);
             Assert.Equal(equal.Key, r.Key);
             Assert.Equal(equal.Value.ValueMultiplicity, r.Value.ValueMultiplicity);

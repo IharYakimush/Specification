@@ -23,10 +23,10 @@
             return result;
         }
 
-        public static SpecificationValue Ref(string key, DataType type)
+        public static SpecificationValue Ref(string key, DataType type, Multiplicity multiplicity = Multiplicity.AllOf)
         {
             SpecificationValue result = new SpecificationValue();
-            result.ValueMultiplicity = Multiplicity.AllOf;
+            result.ValueMultiplicity = multiplicity;
             result.Values = new[] { key };
             result.ValueType = type;
             result.IsReference = true;

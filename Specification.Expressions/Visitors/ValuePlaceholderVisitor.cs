@@ -66,10 +66,10 @@
                                 sv = specValue.ReplaceValues(spv.Values, this.Settings);
                             }
                         }
-                        //else if (value is IEnumerable en)
-                        //{
-                        //    sv = specValue.ReplaceValues((IEnumerable)en, this.Settings);
-                        //}
+                        else if (value is IEnumerable en && !(value is string))
+                        {
+                            sv = specValue.ReplaceValues((IEnumerable)en, this.Settings);
+                        }
                         else
                         {
                             sv = specValue.ReplaceValues(new[] { value }, this.Settings);
