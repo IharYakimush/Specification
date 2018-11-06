@@ -205,6 +205,15 @@ namespace Specification.Expressions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to resolve reference in {0}. Available keys: {1}.
+        /// </summary>
+        internal static string MissingReference {
+            get {
+                return ResourceManager.GetString("MissingReference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to not/{0}.
         /// </summary>
         internal static string NotNotMatch {
@@ -237,6 +246,15 @@ namespace Specification.Expressions {
         internal static string OrSpecificationName {
             get {
                 return ResourceManager.GetString("OrSpecificationName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Circular references detected. Processed values: {0}.
+        /// </summary>
+        internal static string RefCircularDep {
+            get {
+                return ResourceManager.GetString("RefCircularDep", resourceCulture);
             }
         }
         

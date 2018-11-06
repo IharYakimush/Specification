@@ -6,6 +6,8 @@
     using System.ComponentModel;
     using System.Linq;
 
+    using global::Specification.Expressions.Impl;
+
     public class SpecificationValue
     {               
         public static SpecificationValue Single(object value)
@@ -17,6 +19,17 @@
             result.Values = new[] { value };
 
             SetType(value.GetType(), result, nameof(value));
+
+            return result;
+        }
+
+        public static SpecificationValue Ref(string key, DataType type)
+        {
+            SpecificationValue result = new SpecificationValue();
+            result.ValueMultiplicity = Multiplicity.AllOf;
+            result.Values = new[] { key };
+            result.ValueType = type;
+            result.IsReference = true;
 
             return result;
         }
@@ -116,16 +129,18 @@
             }
         }
 
-        public SpecificationValue ReplaceValues(IEnumerable values)
+        public SpecificationValue ReplaceValues(IEnumerable values, SpecificationEvaluationSettings settings = null)
         {
+            ValuesCastEnumerable enumerable = new ValuesCastEnumerable(values, this.ValueType, settings);
+
             if (this.ValueMultiplicity == Multiplicity.AllOf)
             {
-                return SpecificationValue.AllOf(values);
+                return SpecificationValue.AllOf(enumerable);
             }
 
             if (this.ValueMultiplicity == Multiplicity.AnyOf)
             {
-                return SpecificationValue.AnyOf(values);
+                return SpecificationValue.AnyOf(enumerable);
             }
 
             throw new InvalidOperationException();
@@ -141,6 +156,8 @@
         public DataType ValueType { get; private set; }
 
         public Multiplicity ValueMultiplicity { get;private set; }
+
+        public bool IsReference { get; private set; } = false;
 
         public enum DataType
         {
@@ -164,6 +181,11 @@
         {
             if (this.Values.Count == 1)
             {
+                if (this.IsReference)
+                {
+                    return $"ref({this.Values.Single()})";
+                }
+
                 return this.Values.Single().ToString();
             }
 

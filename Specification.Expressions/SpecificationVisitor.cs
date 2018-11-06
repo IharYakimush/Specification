@@ -10,7 +10,7 @@
         public virtual Specification Visit(Specification value)
         {
             if (value == null) throw new ArgumentNullException(nameof(value));
-
+            
             this.VisitWithoutModification(value);
 
             if (value is AndSpecification and)

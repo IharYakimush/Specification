@@ -5,6 +5,8 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using global::Specification.Expressions.Visitors;
+
     public abstract class KeyValueSpecification : KeySpecification
     {
         protected KeyValueSpecification(string key, SpecificationValue value)
@@ -46,7 +48,16 @@
             {
                 if (value is SpecificationValue sv)
                 {
-                    specificationValue = sv;
+                    if (sv.IsReference)
+                    {
+                        ValuePlaceholderVisitor visitor = new ValuePlaceholderVisitor(values, settings);
+                        //specificationValue = visitor.vi
+                        throw new NotImplementedException();
+                    }
+                    else
+                    {
+                        specificationValue = sv;
+                    }
                 }
                 else if (value is IEnumerable en)
                 {
