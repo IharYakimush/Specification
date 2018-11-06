@@ -48,16 +48,7 @@
             {
                 if (value is SpecificationValue sv)
                 {
-                    if (sv.IsReference)
-                    {
-                        ValuePlaceholderVisitor visitor = new ValuePlaceholderVisitor(values, settings);
-                        //specificationValue = visitor.vi
-                        throw new NotImplementedException();
-                    }
-                    else
-                    {
-                        specificationValue = sv;
-                    }
+                    specificationValue = sv;
                 }
                 else if (value is IEnumerable en)
                 {
@@ -102,6 +93,11 @@
             SpecificationValue rigth,
             SpecificationEvaluationSettings settings)
         {
+            if (left.IsReference || rigth.IsReference)
+            {
+                throw new NotImplementedException();
+            }
+
             if (left.ValueType != rigth.ValueType)
             {
                 List<object> cast = new List<object>();

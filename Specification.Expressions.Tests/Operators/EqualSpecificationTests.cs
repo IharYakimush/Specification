@@ -18,7 +18,10 @@
             EqualSpecification specification = new EqualSpecification("key", SpecificationValue.Single(r));
             SpecificationResult spr = specification.Evaluate(new Dictionary<string, object> { { "key", l } });
             Assert.Equal(result, spr.IsSatisfied);
-            Assert.Equal(result, specification.Evaluate(new Dictionary<string, object> { { "key", SpecificationValue.Single(l) } }).IsSatisfied);
+            Assert.Equal(
+                result,
+                specification.Evaluate(new Dictionary<string, object> { { "key", SpecificationValue.Single(l) } })
+                    .IsSatisfied);
 
             if (result)
             {
@@ -49,7 +52,10 @@
                 SpecificationValue.AnyOf(new List<int> { r1, r2 }));
 
             Assert.Equal(result, specification.Evaluate(new Dictionary<string, object> { { "key", l } }).IsSatisfied);
-            Assert.Equal(result, specification.Evaluate(new Dictionary<string, object> { { "key", SpecificationValue.Single(l) } }).IsSatisfied);
+            Assert.Equal(
+                result,
+                specification.Evaluate(new Dictionary<string, object> { { "key", SpecificationValue.Single(l) } })
+                    .IsSatisfied);
         }
 
         [Theory]
@@ -66,7 +72,10 @@
                 SpecificationValue.AllOf(new List<int> { r1, r2 }));
 
             Assert.Equal(result, specification.Evaluate(new Dictionary<string, object> { { "key", l } }).IsSatisfied);
-            Assert.Equal(result, specification.Evaluate(new Dictionary<string, object> { { "key", SpecificationValue.Single(l) } }).IsSatisfied);
+            Assert.Equal(
+                result,
+                specification.Evaluate(new Dictionary<string, object> { { "key", SpecificationValue.Single(l) } })
+                    .IsSatisfied);
         }
 
         [Theory]
@@ -77,9 +86,7 @@
         [InlineData(0, 2, 1, false)]
         public void AnySingle(int l1, int l2, int r, bool result)
         {
-            EqualSpecification specification = new EqualSpecification(
-                "key",
-                SpecificationValue.Single(r));
+            EqualSpecification specification = new EqualSpecification("key", SpecificationValue.Single(r));
 
             Assert.Equal(
                 result,
@@ -176,7 +183,12 @@
         [InlineData(3, true, true, false, false)]
         [InlineData(1, false, false, false, false)]
         [InlineData(1, false, true, true, true)]
-        public void CastIntArrayString(int value, bool allowCast, bool throwCastException, bool result, bool expectException)
+        public void CastIntArrayString(
+            int value,
+            bool allowCast,
+            bool throwCastException,
+            bool result,
+            bool expectException)
         {
             EqualSpecification specification = new EqualSpecification("key", SpecificationValue.AnyOf("1", "2"));
 
@@ -212,6 +224,22 @@
 
             var ae = Assert.Throws<ArgumentException>(() => specification.Evaluate(values));
             Assert.Contains("can't be converted to", ae.Message);
+        }
+
+        [Fact]
+        public void EqualReference()
+        {
+            EqualSpecification specification = new EqualSpecification(
+                "key",
+                SpecificationValue.Ref("k1", SpecificationValue.DataType.Int, SpecificationValue.Multiplicity.AnyOf));
+
+            Assert.True(
+                specification.Evaluate(new Dictionary<string, object>
+                                           {
+                                               { "k1", new[] { 1, 2 } },
+                                               { "key", 1 }
+                                           })
+                    .IsSatisfied);
         }
     }
 }
