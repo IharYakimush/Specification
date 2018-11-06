@@ -47,5 +47,14 @@
                 return encoding.GetString(ms.ToArray());
             }
         }
+
+        public static Specification ResolveValuePlaceholders(
+            this Specification specification,
+            IReadOnlyDictionary<string, object> values)
+        {
+            ValuePlaceholderVisitor visitor = new ValuePlaceholderVisitor(values);
+
+            return visitor.Visit(specification);
+        }
     }
 }

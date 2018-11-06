@@ -104,7 +104,22 @@
                         string.Join(", ", TypeHelper.Mapping.Keys)),
                     paramName);
             }
-        }        
+        }
+
+        public SpecificationValue ReplaceValues(IEnumerable values)
+        {
+            if (this.ValueMultiplicity == Multiplicity.AllOf)
+            {
+                return SpecificationValue.AllOf(values);
+            }
+
+            if (this.ValueMultiplicity == Multiplicity.AnyOf)
+            {
+                return SpecificationValue.AnyOf(values);
+            }
+
+            throw new InvalidOperationException();
+        }
 
         private SpecificationValue()
         {
