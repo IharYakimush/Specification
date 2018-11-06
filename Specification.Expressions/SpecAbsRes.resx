@@ -207,4 +207,7 @@
   <data name="NotToString" xml:space="preserve">
     <value>not ({0})</value>
   </data>
+  <data name="ValuePlaceholderError" xml:space="preserve">
+    <value>Unable to resolve placeholder in {0}. See inner exception</value>
+  </data>
 </root>

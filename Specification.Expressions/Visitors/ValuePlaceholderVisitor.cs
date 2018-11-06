@@ -22,9 +22,16 @@
             {
                 IReadOnlyCollection<object> newValues = this.ReplaceValues(values);
 
-                SpecificationValue sv = eq.Value.ReplaceValues(newValues);
+                try
+                {
+                    SpecificationValue sv = eq.Value.ReplaceValues(newValues);
 
-                return new EqualSpecification(eq.Key, sv);
+                    return new EqualSpecification(eq.Key, sv);
+                }
+                catch (ArgumentException argumentException)
+                {
+                    throw new ArgumentException(string.Format(SpecAbsRes.ValuePlaceholderError, eq), argumentException);
+                }                
             }
 
             return base.VisitEqual(eq);
@@ -43,7 +50,7 @@
                 else
                 {
                     newValues[i] = value;
-                }
+                }                
 
                 i++;
             }

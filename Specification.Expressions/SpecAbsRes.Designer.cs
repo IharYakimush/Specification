@@ -268,6 +268,15 @@ namespace Specification.Expressions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to resolve placeholder in {0}. See inner exception.
+        /// </summary>
+        internal static string ValuePlaceholderError {
+            get {
+                return ResourceManager.GetString("ValuePlaceholderError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Single value expected, however {0} values were provided.
         /// </summary>
         internal static string ValueSpecification_ValueSpecification_Single_value_expected__however__0__values_were_provided {

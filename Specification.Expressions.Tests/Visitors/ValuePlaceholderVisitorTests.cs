@@ -1,5 +1,6 @@
 ﻿namespace Specification.Expressions.Tests.Visitors
 {
+    using System;
     using System.Collections.Generic;
 
     using global::Specification.Expressions.Operators;
@@ -12,7 +13,9 @@
         [Fact]
         public void ReplaceString()
         {
-            EqualSpecification equal = new EqualSpecification("k1", SpecificationValue.AnyOf("{p1}", "qwe"));
+            EqualSpecification equal = new EqualSpecification(
+                "k1",
+                SpecificationValue.AnyOf(new object[] { "{p1}", "qwe", 23 }));
 
             ValuePlaceholderVisitor visitor =
                 new ValuePlaceholderVisitor(new Dictionary<string, object> { { "{p1}", "v1" } });
@@ -23,6 +26,7 @@
             Assert.NotSame(equal, r);
             Assert.Contains("v1", r.Value.Values);
             Assert.Contains("qwe", r.Value.Values);
+            Assert.Contains("23", r.Value.Values);
             Assert.DoesNotContain("{p1}", r.Value.Values);
             Assert.Equal(equal.Key, r.Key);
             Assert.Equal(equal.Value.ValueMultiplicity, r.Value.ValueMultiplicity);
@@ -43,6 +47,7 @@
             Assert.NotSame(equal, r);
             Assert.Contains(2, r.Value.Values);
             Assert.DoesNotContain("{p1}", r.Value.Values);
+            Assert.Equal(SpecificationValue.DataType.Int, r.Value.ValueType);
         }
 
         [Fact]
@@ -59,6 +64,19 @@
             Assert.Same(equal, r);
             Assert.Contains("{p1}", r.Value.Values);
             Assert.DoesNotContain("v1", r.Value.Values);
+        }
+
+        [Fact]
+        public void ReplaceInconsistentTypes()
+        {
+            EqualSpecification equal = new EqualSpecification("k1", SpecificationValue.AnyOf("{p1}", "qwe"));
+
+            ValuePlaceholderVisitor visitor =
+                new ValuePlaceholderVisitor(new Dictionary<string, object> { { "{p1}", 4 } });
+
+            ArgumentException exc = Assert.Throws<ArgumentException>(() => visitor.Visit(equal));
+
+            Assert.Contains("Unable to resolve placeholder in", exc.Message);
         }
     }
 }

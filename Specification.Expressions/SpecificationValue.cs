@@ -70,14 +70,24 @@
                 {
                     if (type != currentType)
                     {
-                        throw new ArgumentException(SpecAbsRes.ValueSpecificationMixedTypes, nameof(values));
+                        if (TypeHelper.HasMappingOrCast(resultValues[i], result.ValueType, SpecificationEvaluationSettings.Default, out object casted))
+                        {
+                            resultValues[i] = casted;
+                        }
+                        else
+                        {
+                            throw new ArgumentException(SpecAbsRes.ValueSpecificationMixedTypes, nameof(values));
+                        }
                     }
                 }
 
                 type = currentType;
-            }
 
-            SetType(type, result, nameof(values));
+                if (i == 0)
+                {
+                    SetType(type, result, nameof(values));
+                }
+            }
 
             return result;
         }
