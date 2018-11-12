@@ -295,6 +295,24 @@ namespace Specification.Expressions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Circular references detected..
+        /// </summary>
+        internal static string SpecValueFromCircular {
+            get {
+                return ResourceManager.GetString("SpecValueFromCircular", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  Processed values: {0}.
+        /// </summary>
+        internal static string SpecValueFromProcessed {
+            get {
+                return ResourceManager.GetString("SpecValueFromProcessed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Value is null.
         /// </summary>
         internal static string SpecValueTryFromNull {

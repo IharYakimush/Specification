@@ -115,6 +115,8 @@
             }
             else 
             {
+                Assert.Null(specification);
+
                 if (ee == null)
                 {
                     Assert.Null(error);
@@ -131,8 +133,10 @@
         [InlineData(1, 2, 2, SpecificationValue.Multiplicity.AllOf, false, true, true, SpecificationValue.DataType.Int, SpecificationValue.Multiplicity.AllOf, null)] 
         [InlineData(1, null, 2, SpecificationValue.Multiplicity.AllOf, false, true, false, SpecificationValue.DataType.Int, SpecificationValue.Multiplicity.AllOf, "null")] 
         [InlineData(1, "2", 2, SpecificationValue.Multiplicity.AllOf, false, true, false, SpecificationValue.DataType.Int, SpecificationValue.Multiplicity.AllOf, "All values should have the same type")] 
+        [InlineData(1, "2", 2, SpecificationValue.Multiplicity.AllOf, false, false, false, SpecificationValue.DataType.Int, SpecificationValue.Multiplicity.AllOf, null)] 
         [InlineData(1, "2", 2, SpecificationValue.Multiplicity.AllOf, true, true, true, SpecificationValue.DataType.Int, SpecificationValue.Multiplicity.AllOf, null)] 
         [InlineData(1d, "2", 2, SpecificationValue.Multiplicity.AllOf, true, true, false, SpecificationValue.DataType.Int, SpecificationValue.Multiplicity.AllOf, "System.Double at index 0 not supported")] 
+        [InlineData(1d, "2", 2, SpecificationValue.Multiplicity.AllOf, true, false, false, SpecificationValue.DataType.Int, SpecificationValue.Multiplicity.AllOf, null)] 
         public void FromEnum(object v1, object v2, object eval, SpecificationValue.Multiplicity sm, bool sac, bool sid, bool er, SpecificationValue.DataType et, SpecificationValue.Multiplicity em, string ee)
         {
             bool result = SpecificationValue.TryFrom(
@@ -154,6 +158,7 @@
             }
             else
             {
+                Assert.Null(specification);
                 if (ee == null)
                 {
                     Assert.Null(error);
@@ -162,6 +167,55 @@
                 {
                     Assert.Contains(ee, error);
                 }
+            }
+        }
+
+        [Theory]
+        [InlineData("k2", true, 1, null)]
+        [InlineData("k1", true, 1, null)]
+        [InlineData("qwe", false, null, "Key qwe is missing")]
+        [InlineData("qweref", false, null, "Key qwe is missing Processed values: ref(qwe)")]
+        [InlineData("nf", false, null, "Key not_exists is missing Processed values: ref(ne), ref(not_exists)")]
+        [InlineData("c1", false, null, "Circular references detected. Processed values: ref(c2), ref(c1)")]
+        [InlineData("c2", false, null, "Circular references detected. Processed values: ref(c1), ref(c2)")]
+        public void FromKey(string key, bool expectedResult, object expectedValue, string expectedError)
+        {
+            Dictionary<string, object> values =
+                new Dictionary<string, object>()
+                    {
+                        { "c1", SpecificationValue.Ref("c2") },
+                        { "c2", SpecificationValue.Ref("c1") },
+                        { "k1", SpecificationValue.Ref("k2") },
+                        { "k2", SpecificationValue.Single(1) },
+                        { "ne", SpecificationValue.Ref("not_exists") },
+                        { "nf", SpecificationValue.Ref("ne") },
+                        { "qweref", SpecificationValue.Ref("qwe") }
+                    };
+
+            bool result = SpecificationValue.TryFrom(
+                key,
+                values,
+                SpecificationValueSettings.Default,
+                out SpecificationValue specification,
+                out string error);
+
+            Assert.Equal(expectedResult, result);
+            if (result)
+            {
+                Assert.Contains(expectedValue, specification.Values);
+            }
+            else
+            {
+                Assert.Null(specification);
+            }
+
+            if (expectedError != null)
+            {
+                Assert.Contains(expectedError, error);
+            }
+            else
+            {
+                Assert.Null(error);
             }
         }
     }

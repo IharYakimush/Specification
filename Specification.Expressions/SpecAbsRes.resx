@@ -222,6 +222,12 @@
   <data name="RefCircularDep" xml:space="preserve">
     <value>Circular references detected. Processed values: {0}</value>
   </data>
+  <data name="SpecValueFromCircular" xml:space="preserve">
+    <value>Circular references detected.</value>
+  </data>
+  <data name="SpecValueFromProcessed" xml:space="preserve">
+    <value> Processed values: {0}</value>
+  </data>  
   <data name="SpecValueTryFromNull" xml:space="preserve">
     <value>Value is null</value>
   </data>

@@ -66,6 +66,81 @@
             throw new ArgumentException(error);
         }
 
+        public static bool TryFrom(
+            string key,
+            IReadOnlyDictionary<string, object> values,
+            SpecificationValueSettings settings,
+            out SpecificationValue result,
+            out string error)
+        {
+            return TryFrom(key, values, settings, new HashSet<SpecificationValue>(), out result, out error);
+        }
+
+        private static bool TryFrom(
+            string key,
+            IReadOnlyDictionary<string, object> values,
+            SpecificationValueSettings settings,
+            HashSet<SpecificationValue> processed,
+            out SpecificationValue result,
+            out string error)
+        {
+            result = null;
+            error = null;
+            if (key == null) throw new ArgumentNullException(nameof(key));
+            if (values == null) throw new ArgumentNullException(nameof(values));
+            if (settings == null) throw new ArgumentNullException(nameof(settings));
+            if (processed == null) throw new ArgumentNullException(nameof(processed));
+
+            if (values.ContainsKey(key))
+            {
+                object value = values[key];
+
+                if (TryFrom(value, settings, out result, out error))
+                {
+                    if (result.IsReference)
+                    {
+                        if (processed.Contains(result))
+                        {
+                            if (settings.IncludeDetails)
+                            {
+                                processed.Add(result); // Add to display correct message
+                                error = SpecAbsRes.SpecValueFromCircular + string.Format(
+                                            SpecAbsRes.SpecValueFromProcessed,
+                                            string.Join(", ", processed));
+                            }
+
+                            result = null;
+                            return false;
+                        }
+
+                        processed.Add(result);
+
+                        string next = result.Values.Single().ToString();
+
+                        return TryFrom(next, values, settings, processed, out result, out error);
+                    }
+
+                    return true;
+                }
+
+                return false;
+            }
+
+            if (settings.IncludeDetails)
+            {
+                error = string.Format(SpecAbsRes.KeyValueSpecificationMissingKey, key);
+
+                if (processed.Any())
+                {
+                    error += string.Format(
+                        SpecAbsRes.SpecValueFromProcessed,
+                        string.Join(", ", processed));
+                }
+            }
+
+            return false;
+        }
+
         public static bool TryFrom(object value, SpecificationValueSettings settings, out SpecificationValue result, out string error)
         {
             error = null;
