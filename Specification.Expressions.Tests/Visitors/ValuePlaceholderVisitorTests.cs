@@ -27,8 +27,8 @@
             Assert.Contains("v1", r.Value.Values);
             Assert.DoesNotContain("{p1}", r.Value.Values);
             Assert.Equal(equal.Key, r.Key);
-            Assert.Equal(equal.Value.ValueMultiplicity, r.Value.ValueMultiplicity);
-            Assert.Equal(equal.Value.ValueType, r.Value.ValueType);
+            Assert.Equal(SpecificationValue.Single("v1").ValueMultiplicity, r.Value.ValueMultiplicity);
+            Assert.Equal(SpecificationValue.DataType.String, r.Value.ValueType);
         }
 
         [Fact]
@@ -70,8 +70,8 @@
             Assert.Contains("v1", r.Value.Values);
             Assert.DoesNotContain("{p1}", r.Value.Values);
             Assert.Equal(equal.Key, r.Key);
-            Assert.Equal(equal.Value.ValueMultiplicity, r.Value.ValueMultiplicity);
-            Assert.Equal(equal.Value.ValueType, r.Value.ValueType);
+            Assert.Equal(SpecificationValue.Single("v1").ValueMultiplicity, r.Value.ValueMultiplicity);
+            Assert.Equal(SpecificationValue.DataType.String, r.Value.ValueType);
         }
 
         [Fact]
@@ -92,8 +92,8 @@
             Assert.Contains("v2", r.Value.Values);
             Assert.DoesNotContain("{p1}", r.Value.Values);
             Assert.Equal(equal.Key, r.Key);
-            Assert.Equal(equal.Value.ValueMultiplicity, r.Value.ValueMultiplicity);
-            Assert.Equal(equal.Value.ValueType, r.Value.ValueType);
+            Assert.Equal(SpecificationValue.Multiplicity.AnyOf, r.Value.ValueMultiplicity);
+            Assert.Equal(SpecificationValue.DataType.String, r.Value.ValueType);
         }
 
         [Fact]
@@ -127,7 +127,7 @@
 
             InvalidOperationException exc = Assert.Throws<InvalidOperationException>(() => visitor.Visit(equal));
 
-            Assert.Contains("Unable to resolve reference in", exc.Message);            
+            Assert.Contains("Unable to resolve reference for k1 equal ref({p1}). Key {p1} is missing", exc.Message);            
         }
 
         [Fact]
@@ -139,7 +139,7 @@
 
             ValuePlaceholderVisitor visitor = new ValuePlaceholderVisitor(
                 new Dictionary<string, object> { { "{p2}", "v1" } },
-                new SpecificationEvaluationSettings { ThrowMissingReference = false });
+                new SpecificationEvaluationSettings { ThrowReferenceErrors = false });
 
             Specification result = visitor.Visit(equal);
 
@@ -159,9 +159,9 @@
             ValuePlaceholderVisitor visitor =
                 new ValuePlaceholderVisitor(new Dictionary<string, object> { { "{p1}", TimeSpan.FromDays(1) } });
 
-            ArgumentException exc = Assert.Throws<ArgumentException>(() => visitor.Visit(equal));
+            InvalidOperationException exc = Assert.Throws<InvalidOperationException>(() => visitor.Visit(equal));
 
-            Assert.Contains("Unable to resolve placeholder in", exc.Message);
+            Assert.Contains("Unable to resolve reference for k1 equal ref({p1}). Value of type System.TimeSpan not supported.", exc.Message);
         }
 
         [Fact]
@@ -186,12 +186,12 @@
             Assert.DoesNotContain("{p1}", r.Value.Values);
             Assert.DoesNotContain("{p2}", r.Value.Values);
             Assert.Equal(equal.Key, r.Key);
-            Assert.Equal(equal.Value.ValueMultiplicity, r.Value.ValueMultiplicity);
-            Assert.Equal(equal.Value.ValueType, r.Value.ValueType);
+            Assert.Equal(SpecificationValueSettings.DefaultAllOf.DefaultMultiplicity, r.Value.ValueMultiplicity);
+            Assert.Equal(SpecificationValue.DataType.String, r.Value.ValueType);
         }
 
         [Fact]
-        public void ReplaceReferenceCast()
+        public void ReplaceReferenceOfAnotherType()
         {
             EqualSpecification equal = new EqualSpecification(
                 "k1",
@@ -208,12 +208,11 @@
 
             var r = Assert.IsType<EqualSpecification>(result);
             Assert.NotSame(equal, r);
-            Assert.Contains("23", r.Value.Values);
+            Assert.Contains(23, r.Value.Values);
             Assert.DoesNotContain("{p1}", r.Value.Values);
             Assert.DoesNotContain("{p2}", r.Value.Values);
             Assert.Equal(equal.Key, r.Key);
-            Assert.Equal(equal.Value.ValueMultiplicity, r.Value.ValueMultiplicity);
-            Assert.Equal(equal.Value.ValueType, r.Value.ValueType);
+            Assert.Equal(SpecificationValue.DataType.Int, r.Value.ValueType);
         }
 
         [Fact]
@@ -230,9 +229,9 @@
                         { "{p2}", TimeSpan.FromDays(1) },
                     });
 
-            ArgumentException exc = Assert.Throws<ArgumentException>(() => visitor.Visit(equal));
+            InvalidOperationException exc = Assert.Throws<InvalidOperationException>(() => visitor.Visit(equal));
 
-            Assert.Contains("Unable to resolve placeholder in", exc.Message);
+            Assert.Contains("Unable to resolve", exc.Message);
             Assert.Contains("{p1}", exc.ToString());
             Assert.Contains("{p2}", exc.ToString());
         }

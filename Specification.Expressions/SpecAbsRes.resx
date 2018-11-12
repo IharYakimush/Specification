@@ -217,7 +217,7 @@
     <value>Unable to resolve placeholder in {0}. See inner exception</value>
   </data>
   <data name="MissingReference" xml:space="preserve">
-    <value>Unable to resolve reference in {0}. Available keys: {1}</value>
+    <value>Unable to resolve reference for {0}. {1}</value>
   </data>
   <data name="RefCircularDep" xml:space="preserve">
     <value>Circular references detected. Processed values: {0}</value>

@@ -9,7 +9,6 @@
 
     public class ValuePlaceholderVisitor : SpecificationVisitor
     {
-        private readonly HashSet<SpecificationValue> ProcessedValues = new HashSet<SpecificationValue>();
         public IReadOnlyDictionary<string, object> Values { get; }
 
         public SpecificationEvaluationSettings Settings { get; }
@@ -30,7 +29,7 @@
         }
 
         private TSpec ReplaceValue<TSpec>(
-            Specification specification,
+            KeyValueSpecification specification,
             SpecificationValue specValue,
             Func<SpecificationValue, TSpec> factory,
             Func<TSpec> baseFactory)
@@ -38,61 +37,15 @@
         {
             if (specValue.IsReference)
             {
-                if (this.ProcessedValues.Contains(specValue))
+                if (SpecificationValue.TryFrom(specValue.Values.Single().ToString(), this.Values, this.Settings.ValueSettings, out SpecificationValue sv,out string error))
                 {
-                    throw new InvalidOperationException(
-                        string.Format(SpecAbsRes.RefCircularDep, string.Join(", ", this.ProcessedValues)));
-                }
-
-                this.ProcessedValues.Add(specValue);
-
-                string key = specValue.Values.OfType<string>().Single();
-                if (this.Values.ContainsKey(key) && this.Values[key] != null)
-                {
-                    SpecificationValue sv;
-                    try
-                    {
-                        object value = this.Values[key];
-
-                        if (value is SpecificationValue spv)
-                        {
-                            if (spv.IsReference)
-                            {
-                                TSpec resolved = this.ReplaceValue(factory(spv), (SpecificationValue)spv, factory, baseFactory);
-                                sv = specValue.ReplaceValues(resolved.Value.Values, this.Settings);
-                            }
-                            else
-                            {
-                                sv = specValue.ReplaceValues(spv.Values, this.Settings);
-                            }
-                        }
-                        else if (value is IEnumerable en && !(value is string))
-                        {
-                            sv = specValue.ReplaceValues((IEnumerable)en, this.Settings);
-                        }
-                        else
-                        {
-                            sv = specValue.ReplaceValues(new[] { value }, this.Settings);
-                        }
-                    }
-                    catch (ArgumentException argumentException)
-                    {
-                        throw new ArgumentException(
-                            string.Format(SpecAbsRes.ValuePlaceholderError, specification),
-                            argumentException);
-                    }
-
                     return factory(sv);
                 }
-                else if (this.Settings.ThrowMissingReference)
+
+                if (this.Settings.ThrowReferenceErrors)
                 {
                     throw new InvalidOperationException(
-                        string.Format(
-                            SpecAbsRes.MissingReference,
-                            specification,
-                            string.Join(
-                                ", ",
-                                this.Values.Select(p => p.Key + (p.Value == null ? "(null)" : string.Empty)))));
+                        string.Format(SpecAbsRes.MissingReference, specification, error));
                 }
             }
 

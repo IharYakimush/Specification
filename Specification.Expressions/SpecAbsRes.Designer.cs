@@ -205,7 +205,7 @@ namespace Specification.Expressions {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to resolve reference in {0}. Available keys: {1}.
+        ///   Looks up a localized string similar to Unable to resolve reference for {0}. {1}.
         /// </summary>
         internal static string MissingReference {
             get {

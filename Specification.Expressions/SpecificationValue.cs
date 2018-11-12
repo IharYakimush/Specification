@@ -123,6 +123,11 @@
                     return true;
                 }
 
+                if (settings.IncludeDetails && processed.Any())
+                {
+                    error += string.Format(SpecAbsRes.SpecValueFromProcessed, string.Join(", ", processed));
+                }
+
                 return false;
             }
 
