@@ -18,8 +18,8 @@
 
         public static bool HasMappingOrCast(
             object value, 
-            SpecificationValue.DataType desiredType, 
-            SpecificationEvaluationSettings settings, 
+            SpecificationValue.DataType desiredType,
+            SpecificationSettings settings, 
             out object result)
         {
             result = value;

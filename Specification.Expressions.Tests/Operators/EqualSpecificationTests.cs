@@ -231,7 +231,7 @@
         {
             EqualSpecification specification = new EqualSpecification(
                 "key",
-                SpecificationValue.Ref("k1", SpecificationValue.DataType.Int, SpecificationValue.Multiplicity.AnyOf));
+                SpecificationValue.Ref("k1"));
 
             Assert.True(
                 specification.Evaluate(new Dictionary<string, object>

@@ -15,7 +15,7 @@
         {
             EqualSpecification equal = new EqualSpecification(
                 "k1",
-                SpecificationValue.Ref("{p1}", SpecificationValue.DataType.String));
+                SpecificationValue.Ref("{p1}"));
 
             ValuePlaceholderVisitor visitor =
                 new ValuePlaceholderVisitor(new Dictionary<string, object> { { "{p1}", "v1" } });
@@ -36,7 +36,7 @@
         {
             EqualSpecification equal = new EqualSpecification(
                 "k1",
-                SpecificationValue.Ref("{p1}", SpecificationValue.DataType.String));
+                SpecificationValue.Ref("{p1}"));
 
             ValuePlaceholderVisitor visitor =
                 new ValuePlaceholderVisitor(new Dictionary<string, object> { { "{p1}", new[] { "v1", "v2" } } });
@@ -58,7 +58,7 @@
         {
             EqualSpecification equal = new EqualSpecification(
                 "k1",
-                SpecificationValue.Ref("{p1}", SpecificationValue.DataType.String));
+                SpecificationValue.Ref("{p1}"));
 
             ValuePlaceholderVisitor visitor = new ValuePlaceholderVisitor(
                 new Dictionary<string, object> { { "{p1}", SpecificationValue.Single("v1") } });
@@ -79,7 +79,7 @@
         {
             EqualSpecification equal = new EqualSpecification(
                 "k1",
-                SpecificationValue.Ref("{p1}", SpecificationValue.DataType.String));
+                SpecificationValue.Ref("{p1}"));
 
             ValuePlaceholderVisitor visitor = new ValuePlaceholderVisitor(
                 new Dictionary<string, object> { { "{p1}", SpecificationValue.AnyOf("v1", "v2") } });
@@ -101,7 +101,7 @@
         {
             EqualSpecification equal = new EqualSpecification(
                 "k1",
-                SpecificationValue.Ref("{p1}", SpecificationValue.DataType.Int));
+                SpecificationValue.Ref("{p1}"));
 
             ValuePlaceholderVisitor visitor =
                 new ValuePlaceholderVisitor(new Dictionary<string, object> { { "{p1}", 2 } });
@@ -120,7 +120,7 @@
         {
             EqualSpecification equal = new EqualSpecification(
                 "k1",
-                SpecificationValue.Ref("{p1}", SpecificationValue.DataType.String));
+                SpecificationValue.Ref("{p1}"));
 
             ValuePlaceholderVisitor visitor =
                 new ValuePlaceholderVisitor(new Dictionary<string, object> { { "{p2}", "v1" } });
@@ -135,7 +135,7 @@
         {
             EqualSpecification equal = new EqualSpecification(
                 "k1",
-                SpecificationValue.Ref("{p1}", SpecificationValue.DataType.String));
+                SpecificationValue.Ref("{p1}"));
 
             ValuePlaceholderVisitor visitor = new ValuePlaceholderVisitor(
                 new Dictionary<string, object> { { "{p2}", "v1" } },
@@ -154,7 +154,7 @@
         {
             EqualSpecification equal = new EqualSpecification(
                 "k1",
-                SpecificationValue.Ref("{p1}", SpecificationValue.DataType.Float));
+                SpecificationValue.Ref("{p1}"));
 
             ValuePlaceholderVisitor visitor =
                 new ValuePlaceholderVisitor(new Dictionary<string, object> { { "{p1}", TimeSpan.FromDays(1) } });
@@ -169,12 +169,12 @@
         {
             EqualSpecification equal = new EqualSpecification(
                 "k1",
-                SpecificationValue.Ref("{p1}", SpecificationValue.DataType.String));
+                SpecificationValue.Ref("{p1}"));
 
             ValuePlaceholderVisitor visitor = new ValuePlaceholderVisitor(
                 new Dictionary<string, object>
                     {
-                        { "{p1}", SpecificationValue.Ref("{p2}", SpecificationValue.DataType.String) },
+                        { "{p1}", SpecificationValue.Ref("{p2}") },
                         { "{p2}", SpecificationValue.Single("qwe") },
                     });
 
@@ -195,12 +195,12 @@
         {
             EqualSpecification equal = new EqualSpecification(
                 "k1",
-                SpecificationValue.Ref("{p1}", SpecificationValue.DataType.String));
+                SpecificationValue.Ref("{p1}"));
 
             ValuePlaceholderVisitor visitor = new ValuePlaceholderVisitor(
                 new Dictionary<string, object>
                     {
-                        { "{p1}", SpecificationValue.Ref("{p2}", SpecificationValue.DataType.Int) },
+                        { "{p1}", SpecificationValue.Ref("{p2}") },
                         { "{p2}", SpecificationValue.Single(23) },
                     });
 
@@ -221,12 +221,12 @@
         {
             EqualSpecification equal = new EqualSpecification(
                 "k1",
-                SpecificationValue.Ref("{p1}", SpecificationValue.DataType.String));
+                SpecificationValue.Ref("{p1}"));
 
             ValuePlaceholderVisitor visitor = new ValuePlaceholderVisitor(
                 new Dictionary<string, object>
                     {
-                        { "{p1}", SpecificationValue.Ref("{p2}", SpecificationValue.DataType.Int) },
+                        { "{p1}", SpecificationValue.Ref("{p2}") },
                         { "{p2}", TimeSpan.FromDays(1) },
                     });
 
@@ -242,13 +242,13 @@
         {
             EqualSpecification equal = new EqualSpecification(
                 "k1",
-                SpecificationValue.Ref("{p1}", SpecificationValue.DataType.String));
+                SpecificationValue.Ref("{p1}"));
 
             ValuePlaceholderVisitor visitor = new ValuePlaceholderVisitor(
                 new Dictionary<string, object>
                     {
-                        { "{p1}", SpecificationValue.Ref("{p2}", SpecificationValue.DataType.String) },
-                        { "{p2}", SpecificationValue.Ref("{p1}", SpecificationValue.DataType.String) },
+                        { "{p1}", SpecificationValue.Ref("{p2}") },
+                        { "{p2}", SpecificationValue.Ref("{p1}") },
                     });
 
             var exc = Assert.Throws<InvalidOperationException>(() => visitor.Visit(equal));

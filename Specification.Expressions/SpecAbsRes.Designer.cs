@@ -286,6 +286,24 @@ namespace Specification.Expressions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Value of type {0} at index {1} not supported. List of supported types: {2}.
+        /// </summary>
+        internal static string SpecificationValueTypeNotSupportedElement {
+            get {
+                return ResourceManager.GetString("SpecificationValueTypeNotSupportedElement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value is null.
+        /// </summary>
+        internal static string SpecValueTryFromNull {
+            get {
+                return ResourceManager.GetString("SpecValueTryFromNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to resolve placeholder in {0}. See inner exception.
         /// </summary>
         internal static string ValuePlaceholderError {
@@ -301,6 +319,15 @@ namespace Specification.Expressions {
             get {
                 return ResourceManager.GetString("ValueSpecification_ValueSpecification_Single_value_expected__however__0__values_w" +
                         "ere_provided", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Element at index {0} is null.
+        /// </summary>
+        internal static string ValueSpecificationElementNull {
+            get {
+                return ResourceManager.GetString("ValueSpecificationElementNull", resourceCulture);
             }
         }
         

@@ -1,11 +1,9 @@
 ﻿namespace Specification.Expressions
 {
-    public class SpecificationEvaluationSettings
+    public class SpecificationEvaluationSettings : SpecificationSettings
     {
-        internal static SpecificationEvaluationSettings Default { get; } = new SpecificationEvaluationSettings();
+        public static SpecificationEvaluationSettings Default { get; } = new SpecificationEvaluationSettings();
 
-        public bool IncludeDetails { get; set; } = true;
-        public bool AllowCast { get; set; } = true;
         public bool ThrowCastErrors { get; set; } = true;
         public bool ThrowMissingReference { get; set; } = true;
     }

@@ -129,6 +129,9 @@
   <data name="ValueSpecificationZeroCount" xml:space="preserve">
     <value>At least one value should be provided</value>
   </data>
+  <data name="ValueSpecificationElementNull" xml:space="preserve">
+    <value>Element at index {0} is null</value>
+  </data>
   <data name="ValueSpecificationMixedTypes" xml:space="preserve">
     <value>All values should have the same type</value>
   </data>
@@ -143,6 +146,9 @@
   </data>
   <data name="SpecificationValueTypeNotSupported" xml:space="preserve">
     <value>Value of type {0} not supported. List of supported types: {1}</value>
+  </data>
+  <data name="SpecificationValueTypeNotSupportedElement" xml:space="preserve">
+    <value>Value of type {0} at index {1} not supported. List of supported types: {2}</value>
   </data>
   <data name="KeyValueSpecificationMissingKey" xml:space="preserve">
     <value>Key {0} is missing</value>
@@ -215,5 +221,8 @@
   </data>
   <data name="RefCircularDep" xml:space="preserve">
     <value>Circular references detected. Processed values: {0}</value>
+  </data>
+  <data name="SpecValueTryFromNull" xml:space="preserve">
+    <value>Value is null</value>
   </data>
 </root>

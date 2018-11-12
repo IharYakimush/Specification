@@ -23,36 +23,189 @@
             return result;
         }
 
-        public static SpecificationValue Ref(string key, DataType type, Multiplicity multiplicity = Multiplicity.AllOf)
+        public static SpecificationValue Ref(string key)
         {
             SpecificationValue result = new SpecificationValue();
-            result.ValueMultiplicity = multiplicity;
             result.Values = new[] { key };
-            result.ValueType = type;
             result.IsReference = true;
 
             return result;
         }
 
-        public static SpecificationValue AnyOf<TValue>(params TValue[] values)
+        public static SpecificationValue AnyOf<TValue>(TValue first, params TValue[] values)
         {
-            // Workaround for incorrect default params binding
-            if (values.Length == 1 && values[0] is IEnumerable en)
+            if (first == null) throw new ArgumentNullException(nameof(first));
+            if (values == null) throw new ArgumentNullException(nameof(values));
+
+            if (TryFrom(
+                Enumerable.Repeat(first, 1).Concat(values),
+                SpecificationValueSettings.Default,
+                out var result,
+                out var error))
             {
-                return AnyOf(en);
+                return result;
             }
 
-            return AnyOf((IEnumerable)values);
+            throw new ArgumentException(error);
         }
-        public static SpecificationValue AllOf<TValue>(params TValue[] values)
+
+        public static SpecificationValue AllOf<TValue>(TValue first, params TValue[] values)
         {
-            // Workaround for incorrect default params binding
-            if (values.Length == 1 && values[0] is IEnumerable en)
+            if (first == null) throw new ArgumentNullException(nameof(first));
+            if (values == null) throw new ArgumentNullException(nameof(values));
+
+            if (TryFrom(
+                Enumerable.Repeat(first, 1).Concat(values),
+                SpecificationValueSettings.DefaultAllOf,
+                out var result,
+                out var error))
             {
-                return AllOf(en);
+                return result;
             }
 
-            return AllOf((IEnumerable)values);
+            throw new ArgumentException(error);
+        }
+
+        public static bool TryFrom(object value, SpecificationValueSettings settings, out SpecificationValue result, out string error)
+        {
+            error = null;
+            result = null;
+
+            if (value == null)
+            {
+                if (settings.IncludeDetails)
+                {
+                    error = SpecAbsRes.SpecValueTryFromNull;
+                }
+
+                return false;
+            }
+
+            Type type = value.GetType();
+
+            if (value is SpecificationValue sv)
+            {                
+                result = sv;
+                return true;
+            }
+
+            if (TypeHelper.Mapping.ContainsKey(type))
+            {
+                result = Single(value);
+                return true;
+            }
+
+            if (value is IEnumerable en)
+            {
+                result = new SpecificationValue();
+                result.ValueMultiplicity = settings.DefaultMultiplicity;
+                List<object> resultValues = new List<object>(5);
+
+                int j = 0;
+                foreach (object o in en)
+                {
+                    if (o == null)
+                    {
+                        if (settings.IncludeDetails)
+                        {
+                            error = string.Format(SpecAbsRes.ValueSpecificationElementNull, j);
+                        }
+
+                        result = null;
+                        return false;
+                    }
+
+                    j++;
+                    resultValues.Add(o);
+                }
+
+                if (resultValues.Count == 0)
+                {
+                    if (settings.IncludeDetails)
+                    {
+                        error = SpecAbsRes.ValueSpecificationZeroCount;
+                    }
+
+                    result = null;
+                    return false;
+                }
+
+                result.Values = resultValues;
+                Type itemType = null;
+
+                for (int i = 0; i < resultValues.Count; i++)
+                {
+                    if (resultValues[i] == null)
+                    {
+                        if (settings.IncludeDetails)
+                        {
+                            error = string.Format(SpecAbsRes.ValueSpecificationElementNull, i);
+                        }
+
+                        result = null;
+                        return false;
+                    }
+
+                    Type currentType = resultValues[i].GetType();
+
+                    if (itemType != null)
+                    {
+                        if (itemType != currentType)
+                        {
+                            if (TypeHelper.HasMappingOrCast(resultValues[i], result.ValueType, settings, out object casted))
+                            {
+                                resultValues[i] = casted;
+                            }
+                            else
+                            {
+                                if (settings.IncludeDetails)
+                                {
+                                    error = SpecAbsRes.ValueSpecificationMixedTypes;
+                                }
+
+                                result = null;
+                                return false;
+                            }
+                        }
+                    }
+
+                    itemType = currentType;
+
+                    if (i == 0)
+                    {
+                        if (TypeHelper.Mapping.ContainsKey(itemType))
+                        {
+                            result.ValueType = TypeHelper.Mapping[itemType];
+                        }
+                        else
+                        {
+                            if (settings.IncludeDetails)
+                            {
+                                error = string.Format(
+                                    SpecAbsRes.SpecificationValueTypeNotSupportedElement,
+                                    itemType,
+                                    i,
+                                    string.Join(", ", TypeHelper.Mapping.Keys));
+                            }
+
+                            result = null;
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            }
+
+            if (settings.IncludeDetails)
+            {
+                error = string.Format(
+                    SpecAbsRes.SpecificationValueTypeNotSupported,
+                    type,
+                    string.Join(", ", TypeHelper.Mapping.Keys));
+            }
+            
+            return false;
         }
 
         public static SpecificationValue AnyOf(IEnumerable values)
