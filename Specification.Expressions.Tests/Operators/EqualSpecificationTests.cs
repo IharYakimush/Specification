@@ -160,15 +160,15 @@
             SpecificationEvaluationSettings settings =
                 new SpecificationEvaluationSettings
                     {
-                        IncludeDetails = true,
-                        AllowCast = allowCast,
-                        ThrowCastErrors = throwCastException
+                        IncludeDetails = true,                        
+                        ThrowValueErrors = throwCastException
                     };
+            settings.ValueSettings.AllowCast = allowCast;
             Dictionary<string, object> values = new Dictionary<string, object> { { "key", value } };
 
             if (expectException)
             {
-                Assert.Throws<ArgumentException>(() => specification.Evaluate(values, settings));
+                Assert.Throws<InvalidOperationException>(() => specification.Evaluate(values, settings));
             }
             else
             {
@@ -196,15 +196,15 @@
                 new SpecificationEvaluationSettings
                     {
                         IncludeDetails = true,
-                        AllowCast = allowCast,
-                        ThrowCastErrors = throwCastException
+                        ThrowValueErrors = throwCastException
                     };
+            settings.ValueSettings.AllowCast = allowCast;
             Dictionary<string, object> values =
                 new Dictionary<string, object> { { "key", new List<int> { value, 123 } } };
 
             if (expectException)
             {
-                var ae = Assert.Throws<ArgumentException>(() => specification.Evaluate(values, settings));
+                var ae = Assert.Throws<InvalidOperationException>(() => specification.Evaluate(values, settings));
                 Assert.Contains("can't be compared with type", ae.Message);
             }
             else
@@ -222,8 +222,8 @@
             Dictionary<string, object> values =
                 new Dictionary<string, object> { { "key", new List<TimeSpan> { TimeSpan.FromDays(1) } } };
 
-            var ae = Assert.Throws<ArgumentException>(() => specification.Evaluate(values));
-            Assert.Contains("can't be converted to", ae.Message);
+            var ae = Assert.Throws<InvalidOperationException>(() => specification.Evaluate(values));
+            Assert.Contains("Unable to resolve left value", ae.Message);
         }
 
         [Fact]

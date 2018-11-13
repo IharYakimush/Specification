@@ -1,14 +1,31 @@
 ﻿namespace Specification.Expressions
 {
+    using System;
     using System.Collections.Generic;
 
-    public class SpecificationEvaluationSettings : SpecificationSettings
+    public class SpecificationEvaluationSettings : ICloneable
     {
+        private bool includeDetails = true;
+
         public static SpecificationEvaluationSettings Default { get; } = new SpecificationEvaluationSettings();
 
-        public bool ThrowCastErrors { get; set; } = true;
-        public bool ThrowReferenceErrors { get; set; } = true;
+        public bool ThrowValueErrors { get; set; } = true;
 
-        public SpecificationValueSettings ValueSettings { get; set; } = SpecificationValueSettings.Default;
+        public bool IncludeDetails
+        {
+            get => this.includeDetails;
+            set
+            {
+                this.includeDetails = value;
+                this.ValueSettings.IncludeDetails = value;
+            }
+        }
+
+        public SpecificationValueSettings ValueSettings { get; } = (SpecificationValueSettings)SpecificationValueSettings.Default.Clone();
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

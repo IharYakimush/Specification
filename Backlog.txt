@@ -1,3 +1,4 @@
 1. Support references in all implementations of KeySpecification
 2. Support references in all KeyValueSpecifications
 3. In any cases resolve reference first, then all other checks
+4. Merge ThrowReferences and ThrowCast to single setting

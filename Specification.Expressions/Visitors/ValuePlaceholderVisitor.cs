@@ -42,7 +42,7 @@
                     return factory(sv);
                 }
 
-                if (this.Settings.ThrowReferenceErrors)
+                if (this.Settings.ThrowValueErrors)
                 {
                     throw new InvalidOperationException(
                         string.Format(SpecAbsRes.MissingReference, specification, error));

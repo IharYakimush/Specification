@@ -30,7 +30,7 @@
         [Fact]
         public void AnyOfNull()
         {
-            Assert.Throws<ArgumentNullException>(() => SpecificationValue.AnyOf(null));
+            Assert.Throws<ArgumentNullException>(() => SpecificationValue.AnyOf((IEnumerable<string>)null));
         }
 
         [Fact]

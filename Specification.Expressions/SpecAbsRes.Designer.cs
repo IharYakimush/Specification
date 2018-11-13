@@ -196,6 +196,24 @@ namespace Specification.Expressions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to resolve left value in {0}. {1}.
+        /// </summary>
+        internal static string KeyValueSpecificationUnableToResolveLeft {
+            get {
+                return ResourceManager.GetString("KeyValueSpecificationUnableToResolveLeft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to resolve right value in {0}. {1}.
+        /// </summary>
+        internal static string KeyValueSpecificationUnableToResolveRight {
+            get {
+                return ResourceManager.GetString("KeyValueSpecificationUnableToResolveRight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Value for key {0} is null.
         /// </summary>
         internal static string KeyValueSpecificationValueNull {

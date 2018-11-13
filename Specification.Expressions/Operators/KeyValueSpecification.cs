@@ -1,11 +1,8 @@
 ﻿namespace Specification.Expressions.Operators
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-
-    using global::Specification.Expressions.Visitors;
 
     public abstract class KeyValueSpecification : KeySpecification
     {
@@ -41,77 +38,68 @@
                         : null);
             }
 
-            Type type = value.GetType();
-            SpecificationValue specificationValue = null;
-            string innerMessage = null;
-            try
+            SpecificationValue left;
+            string error;
+            if (!SpecificationValue.TryFrom(this.Key, values, settings.ValueSettings, out left, out error))
             {
-                if (value is SpecificationValue sv)
+                if (settings.ThrowValueErrors)
                 {
-                    specificationValue = sv;
+                    throw new InvalidOperationException(
+                        string.Format(SpecAbsRes.KeyValueSpecificationUnableToResolveLeft, this, error));
                 }
-                else if (value is IEnumerable en)
+
+                return SpecificationResult.False(
+                    settings.IncludeDetails
+                        ? string.Format(SpecAbsRes.KeyValueSpecificationUnableToResolveLeft, this, error)
+                        : null);
+            }
+
+            SpecificationValue right;
+            if (this.Value.IsReference)
+            {
+                string refKey = this.Value.Values.Single().ToString();
+
+                if (!SpecificationValue.TryFrom(refKey, values, settings.ValueSettings, out right, out error))
                 {
-                    specificationValue = SpecificationValue.AnyOf(en);
+                    if (settings.ThrowValueErrors)
+                    {
+                        throw new InvalidOperationException(
+                            string.Format(SpecAbsRes.KeyValueSpecificationUnableToResolveRight, this, error));
+                    }
+
+                    return SpecificationResult.False(
+                        settings.IncludeDetails
+                            ? string.Format(SpecAbsRes.KeyValueSpecificationUnableToResolveRight, this, error)
+                            : null);
                 }
-                else if (TypeHelper.Mapping.ContainsKey(type))
-                {
-                    specificationValue = SpecificationValue.Single(value);
-                }
             }
-            catch (ArgumentException argExc)
+            else
             {
-                innerMessage = argExc.Message;
+                right = this.Value;
             }
 
-            if (specificationValue != null)
-            {
-                return this.Compare(specificationValue, this.Value, settings);
-            }
-
-            string message = string.Format(
-                SpecAbsRes.KeyValueSpecificationTypeNotSupported,
-                type,
-                this.Key,
-                this.Value.ValueType);
-
-            if (innerMessage != null)
-            {
-                message = $"{message} Details: {innerMessage}";
-            }
-
-            if (settings.ThrowCastErrors)
-            {                
-                throw new ArgumentException(message);
-            }
-
-            return SpecificationResult.Create(false, settings.IncludeDetails ? message : null);
+            return this.Compare(left, right, settings);
         }
 
         protected SpecificationResult Compare(
             SpecificationValue left,
             SpecificationValue rigth,
             SpecificationEvaluationSettings settings)
-        {
-            if (left.IsReference || rigth.IsReference)
-            {
-                throw new NotImplementedException();
-            }
-
+        {            
             if (left.ValueType != rigth.ValueType)
             {
                 List<object> cast = new List<object>();
                 foreach (object leftValue in left.Values)
                 {
-                    if (TypeHelper.HasMappingOrCast(leftValue, rigth.ValueType, settings, out object leftCast))
+                    if (TypeHelper.HasMappingOrCast(leftValue, rigth.ValueType, settings.ValueSettings, out object leftCast))
                     {
                         cast.Add(leftCast);
                     }
                     else
                     {
-                        if (settings.ThrowCastErrors)
+                        if (settings.ThrowValueErrors)
                         {
-                            throw new ArgumentException(
+                            throw new InvalidOperationException(
                                 string.Format(
                                     SpecAbsRes.KeyValueSpecificationTypeNotMatch,
                                     left.ValueType,

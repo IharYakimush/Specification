@@ -162,6 +162,12 @@
   <data name="KeyValueSpecificationValueNull" xml:space="preserve">
     <value>Value for key {0} is null</value>
   </data>
+  <data name="KeyValueSpecificationUnableToResolveLeft" xml:space="preserve">
+    <value>Unable to resolve left value in {0}. {1}</value>
+  </data>
+  <data name="KeyValueSpecificationUnableToResolveRight" xml:space="preserve">
+    <value>Unable to resolve right value in {0}. {1}</value>
+  </data>
   <data name="CompareSpecificationNotMatch" xml:space="preserve">
     <value>{0} value(s) not satisfied {1}</value>
   </data>

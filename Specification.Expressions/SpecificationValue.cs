@@ -6,8 +6,6 @@
     using System.ComponentModel;
     using System.Linq;
 
-    using global::Specification.Expressions.Impl;
-
     public class SpecificationValue
     {               
         public static SpecificationValue Single(object value)
@@ -32,13 +30,12 @@
             return result;
         }
 
-        public static SpecificationValue AnyOf<TValue>(TValue first, params TValue[] values)
+        public static SpecificationValue AnyOf<TValue>(IEnumerable<TValue> values)
         {
-            if (first == null) throw new ArgumentNullException(nameof(first));
             if (values == null) throw new ArgumentNullException(nameof(values));
 
             if (TryFrom(
-                Enumerable.Repeat(first, 1).Concat(values),
+                values,
                 SpecificationValueSettings.Default,
                 out var result,
                 out var error))
@@ -49,13 +46,41 @@
             throw new ArgumentException(error);
         }
 
-        public static SpecificationValue AllOf<TValue>(TValue first, params TValue[] values)
+        public static SpecificationValue AnyOf(IEnumerable values)
         {
-            if (first == null) throw new ArgumentNullException(nameof(first));
             if (values == null) throw new ArgumentNullException(nameof(values));
 
             if (TryFrom(
-                Enumerable.Repeat(first, 1).Concat(values),
+                values,
+                SpecificationValueSettings.Default,
+                out var result,
+                out var error))
+            {
+                return result;
+            }
+
+            throw new ArgumentException(error);
+        }
+
+        public static SpecificationValue AnyOf<TValue>(params TValue[] values)
+        {
+            if (values == null) throw new ArgumentNullException(nameof(values));
+
+            // Workaround for params binding
+            if (values.Length == 1 && values[0] is IEnumerable en)
+            {
+                return AnyOf(en);
+            }
+
+            return AnyOf((IEnumerable)values);
+        }
+
+        public static SpecificationValue AllOf<TValue>(IEnumerable<TValue> values)
+        {
+            if (values == null) throw new ArgumentNullException(nameof(values));
+
+            if (TryFrom(
+                values,
                 SpecificationValueSettings.DefaultAllOf,
                 out var result,
                 out var error))
@@ -64,6 +89,35 @@
             }
 
             throw new ArgumentException(error);
+        }
+
+        public static SpecificationValue AllOf(IEnumerable values)
+        {
+            if (values == null) throw new ArgumentNullException(nameof(values));
+
+            if (TryFrom(
+                values,
+                SpecificationValueSettings.DefaultAllOf,
+                out var result,
+                out var error))
+            {
+                return result;
+            }
+
+            throw new ArgumentException(error);
+        }
+
+        public static SpecificationValue AllOf<TValue>(params TValue[] values)
+        {
+            if (values == null) throw new ArgumentNullException(nameof(values));
+
+            // Workaround for params binding
+            if (values.Length == 1 && values[0] is IEnumerable en)
+            {
+                return AllOf(en);
+            }
+
+            return AllOf((IEnumerable)values);
         }
 
         public static bool TryFrom(
@@ -288,63 +342,6 @@
             return false;
         }
 
-        public static SpecificationValue AnyOf(IEnumerable values)
-        {
-            if (values == null) throw new ArgumentNullException(nameof(values));
-
-            SpecificationValue result = new SpecificationValue();
-            result.ValueMultiplicity = Multiplicity.AnyOf;
-            object[] resultValues = values.OfType<object>().ToArray();
-            if (resultValues.Length == 0)
-            {
-                throw new ArgumentException(SpecAbsRes.ValueSpecificationZeroCount, nameof(values));
-            }
-
-            result.Values = resultValues;
-            Type type = null;
-
-            for (int i = 0; i < resultValues.Length; i++)
-            {
-                if (resultValues[i] == null)
-                {
-                    throw new ArgumentException(SpecAbsRes.ValueSpecificationNullNotAllowed, $"{nameof(values)}[{i}]");
-                }
-
-                Type currentType = resultValues[i].GetType();
-
-                if (type != null)
-                {
-                    if (type != currentType)
-                    {
-                        if (TypeHelper.HasMappingOrCast(resultValues[i], result.ValueType, SpecificationEvaluationSettings.Default, out object casted))
-                        {
-                            resultValues[i] = casted;
-                        }
-                        else
-                        {
-                            throw new ArgumentException(SpecAbsRes.ValueSpecificationMixedTypes, nameof(values));
-                        }
-                    }
-                }
-
-                type = currentType;
-
-                if (i == 0)
-                {
-                    SetType(type, result, nameof(values));
-                }
-            }
-
-            return result;
-        }
-
-        public static SpecificationValue AllOf(IEnumerable values)
-        {
-            SpecificationValue result = AnyOf(values);
-            result.ValueMultiplicity = Multiplicity.AllOf;
-            return result;
-        }
-
         private static void SetType(Type type, SpecificationValue result, string paramName)
         {
             if (TypeHelper.Mapping.ContainsKey(type))
@@ -360,24 +357,7 @@
                         string.Join(", ", TypeHelper.Mapping.Keys)),
                     paramName);
             }
-        }
-
-        public SpecificationValue ReplaceValues(IEnumerable values, SpecificationEvaluationSettings settings = null)
-        {
-            ValuesCastEnumerable enumerable = new ValuesCastEnumerable(values, this.ValueType, settings);
-
-            if (this.ValueMultiplicity == Multiplicity.AllOf)
-            {
-                return SpecificationValue.AllOf(enumerable);
-            }
-
-            if (this.ValueMultiplicity == Multiplicity.AnyOf)
-            {
-                return SpecificationValue.AnyOf(enumerable);
-            }
-
-            throw new InvalidOperationException();
-        }
+        }        
 
         private SpecificationValue()
         {

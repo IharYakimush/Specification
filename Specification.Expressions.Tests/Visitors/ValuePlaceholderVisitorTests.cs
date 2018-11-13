@@ -139,7 +139,7 @@
 
             ValuePlaceholderVisitor visitor = new ValuePlaceholderVisitor(
                 new Dictionary<string, object> { { "{p2}", "v1" } },
-                new SpecificationEvaluationSettings { ThrowReferenceErrors = false });
+                new SpecificationEvaluationSettings { ThrowValueErrors = false });
 
             Specification result = visitor.Visit(equal);
 
