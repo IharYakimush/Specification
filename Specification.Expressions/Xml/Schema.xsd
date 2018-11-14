@@ -10,42 +10,66 @@
 
   <xs:complexType name="valueReference" >
     <xs:complexContent>
-      <xs:restriction base="keyValueSpec">
-        <xs:attribute name="t" use="prohibited" />
-        <xs:attribute name="m" use="prohibited"  />
-        <xs:attribute name="ref" use="required" type="xs:boolean" />          
-        <xs:attribute name="v" use="required" type="xs:string" />
-      </xs:restriction>
+      <xs:extension base="keySpecification">
+        <xs:attribute name="ref" type="xs:boolean" use="required"/>
+        <xs:attribute name="v" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="valueWithType" >
+    <xs:complexContent>
+      <xs:extension base="keySpecification">
+        <xs:attribute name="t" use="optional" default="string">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="int"/>
+              <xs:enumeration value="float"/>
+              <xs:enumeration value="string"/>
+              <xs:enumeration value="dateTime"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="m" use="optional" default="anyof">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="anyof"/>
+              <xs:enumeration value="allof"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="valueSingle" >
+    <xs:complexContent>
+      <xs:extension base="valueWithType">
+        <xs:attribute name="v" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="valueMultiple" >
+    <xs:complexContent>
+      <xs:extension base="valueWithType">
+        <xs:sequence>
+          <xs:element name="v" type="xs:string" minOccurs="2" maxOccurs="unbounded" /> 
+        </xs:sequence>
+      </xs:extension>      
     </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="keyValueSpec">
-    <xs:sequence>
-      <xs:element name="v" type="xs:string" minOccurs="0" maxOccurs="unbounded" nillable="true" >
-
-      </xs:element>
-    </xs:sequence>
-    <xs:attribute name="k" use="required"/>
-    <xs:attribute name="ref" type="xs:boolean"/>
-    <xs:attribute name="t" use="optional" default="string">
-      <xs:simpleType>
-        <xs:restriction base="xs:string">
-          <xs:enumeration value="int"/>
-          <xs:enumeration value="float"/>
-          <xs:enumeration value="string"/>
-          <xs:enumeration value="dateTime"/>
-        </xs:restriction>
-      </xs:simpleType>
-    </xs:attribute>
-    <xs:attribute name="m" use="optional" default="anyof">
-      <xs:simpleType>
-        <xs:restriction base="xs:string">
-          <xs:enumeration value="anyof"/>
-          <xs:enumeration value="allof"/>
-        </xs:restriction>
-      </xs:simpleType>
-    </xs:attribute>
-    <xs:attribute name="v" type="xs:string"/>
+    <xs:complexContent>
+      <xs:extension base="valueWithType">
+        <xs:sequence>
+          <xs:element name="v" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="v" type="xs:string" use="optional"/>
+        <xs:attribute name="ref" type="xs:boolean" use="optional"/>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="hasValueSpec">

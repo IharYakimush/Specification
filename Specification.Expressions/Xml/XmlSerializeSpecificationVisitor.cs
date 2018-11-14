@@ -64,13 +64,46 @@
 
         public override EqualSpecification VisitEqual(EqualSpecification eq)
         {
-            this.XmlWriter.WriteStartElement(Consts.Eq, this.NameSpace);
-            this.WriteKey(eq);
-            this.WriteValue(eq.Value);
-
-            this.XmlWriter.WriteEndElement();
+            this.WriteKeyValueSpecification(eq, Consts.Eq);
 
             return eq;
+        }
+
+        public override GreaterSpecification VisitGreater(GreaterSpecification gt)
+        {
+            this.WriteKeyValueSpecification(gt, Consts.Gt);
+
+            return gt;
+        }
+
+        public override GreaterOrEqualSpecification VisitGreaterOrEqual(GreaterOrEqualSpecification ge)
+        {
+            this.WriteKeyValueSpecification(ge, Consts.Ge);
+
+            return ge;
+        }
+
+        public override LessSpecification VisitLess(LessSpecification lt)
+        {
+            this.WriteKeyValueSpecification(lt, Consts.Lt);
+
+            return lt;
+        }
+
+        public override LessOrEqualSpecification VisitLessOrEqual(LessOrEqualSpecification le)
+        {
+            this.WriteKeyValueSpecification(le, Consts.Le);
+
+            return le;
+        }
+
+        private void WriteKeyValueSpecification(KeyValueSpecification specification, string name)
+        {
+            this.XmlWriter.WriteStartElement(name, this.NameSpace);
+            this.WriteKey(specification);
+            this.WriteValue(specification.Value);
+
+            this.XmlWriter.WriteEndElement();
         }
 
         private void WriteKey(KeySpecification kv)
@@ -105,7 +138,6 @@
             if (value.IsReference)
             {
                 this.XmlWriter.WriteAttributeString(Consts.Ref, bool.TrueString.ToLowerInvariant());
-                return;
             }
         }
     }

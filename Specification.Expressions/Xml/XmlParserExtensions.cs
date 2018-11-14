@@ -110,7 +110,7 @@
                 bool isRef = GetRef(element, ns);
                 SpecificationValue.Multiplicity mul = GetMul(element, ns);
                 SpecificationValue.DataType type = GetType(element, ns);
-                IEnumerable<string> values = GetValues(element, ns);
+                string[] values = GetValues(element, ns).ToArray();
                 SpecificationValue value;
 
                 if (isRef)
@@ -124,6 +124,21 @@
                 }
                 else
                 {
+                    if (values.Length <= 1)
+                    {
+                        element.Validate(
+                            schema.SchemaTypes[new XmlQualifiedName("valueSingle", ns)],
+                            schemaSet,
+                            (sender, args) => throw new ArgumentException(args.Message, args.Exception));
+                    }
+                    else
+                    {
+                        element.Validate(
+                            schema.SchemaTypes[new XmlQualifiedName("valueMultiple", ns)],
+                            schemaSet,
+                            (sender, args) => throw new ArgumentException(args.Message, args.Exception));
+                    }
+
                     SpecificationValueSettings settings = ValueSettings.GetOrAdd(
                         (int)mul * 1000 + (int)type,
                         i => new SpecificationValueSettings
@@ -148,6 +163,26 @@
                 {
                     return new EqualSpecification(key, value);
                 }
+
+                if (element.Name.LocalName == Consts.Gt)
+                {
+                    return new GreaterSpecification(key, value);
+                }
+
+                if (element.Name.LocalName == Consts.Ge)
+                {
+                    return new GreaterOrEqualSpecification(key, value);
+                }
+
+                if (element.Name.LocalName == Consts.Lt)
+                {
+                    return new LessSpecification(key, value);
+                }
+
+                if (element.Name.LocalName == Consts.Le)
+                {
+                    return new LessOrEqualSpecification(key, value);
+                }
             }
 
             throw new NotImplementedException();
@@ -155,19 +190,20 @@
 
         private static string GetKey(XElement element, string ns)
         {
-            return element.Attributes().Single(at => at.Name.LocalName == Consts.Key && at.Name.Namespace == ns).Value;
+            var xAttributes = element.Attributes().ToArray();
+            return xAttributes.Single(at => at.Name.LocalName == Consts.Key && (at.Name.Namespace == ns || at.Name.Namespace == string.Empty)).Value;
         }
 
         private static bool GetRef(XElement element, string ns)
         {
-            string value = element.Attributes().SingleOrDefault(at => at.Name.LocalName == Consts.Ref && at.Name.Namespace == ns)?.Value;
+            string value = element.Attributes().SingleOrDefault(at => at.Name.LocalName == Consts.Ref && (at.Name.Namespace == ns || at.Name.Namespace == string.Empty))?.Value;
 
             return value != null && bool.Parse(value);
         }
 
         private static SpecificationValue.DataType GetType(XElement element, string ns)
         {
-            string value = element.Attributes().SingleOrDefault(at => at.Name.LocalName == Consts.Type && at.Name.Namespace == ns)?.Value;
+            string value = element.Attributes().SingleOrDefault(at => at.Name.LocalName == Consts.Type && (at.Name.Namespace == ns || at.Name.Namespace == string.Empty))?.Value;
 
             return value == null
                        ? SpecificationValue.DataType.String
@@ -176,7 +212,7 @@
 
         private static SpecificationValue.Multiplicity GetMul(XElement element, string ns)
         {
-            string value = element.Attributes().SingleOrDefault(at => at.Name.LocalName == Consts.Mul && at.Name.Namespace == ns)?.Value;
+            string value = element.Attributes().SingleOrDefault(at => at.Name.LocalName == Consts.Mul && (at.Name.Namespace == ns || at.Name.Namespace == string.Empty))?.Value;
 
             return value == null
                        ? SpecificationValue.Multiplicity.AnyOf
@@ -189,7 +225,7 @@
         private static IEnumerable<string> GetValues(XElement element, string ns)
         {
             XAttribute value = element.Attributes()
-                .SingleOrDefault(at => at.Name.LocalName == Consts.Value && at.Name.Namespace == ns);
+                .SingleOrDefault(at => at.Name.LocalName == Consts.Value && (at.Name.Namespace == ns || at.Name.Namespace == string.Empty));
 
             if (value != null)
             {

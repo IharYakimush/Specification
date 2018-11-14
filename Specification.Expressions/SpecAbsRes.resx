@@ -183,6 +183,18 @@
   <data name="EqualSpecificationName" xml:space="preserve">
     <value>equal</value>
   </data>
+  <data name="LessSpecificationName" xml:space="preserve">
+    <value>lt</value>
+  </data>
+  <data name="LessOrEqualSpecificationName" xml:space="preserve">
+    <value>le</value>
+  </data>
+  <data name="GreaterSpecificationName" xml:space="preserve">
+    <value>gt</value>
+  </data>
+  <data name="GreaterOrEqualSpecificationName" xml:space="preserve">
+    <value>ge</value>
+  </data>
   <data name="ConstantSpecificationFalse" xml:space="preserve">
     <value>Constant false</value>
   </data>

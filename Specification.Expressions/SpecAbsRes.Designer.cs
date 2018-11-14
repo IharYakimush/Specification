@@ -142,6 +142,24 @@ namespace Specification.Expressions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ge.
+        /// </summary>
+        internal static string GreaterOrEqualSpecificationName {
+            get {
+                return ResourceManager.GetString("GreaterOrEqualSpecificationName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to gt.
+        /// </summary>
+        internal static string GreaterSpecificationName {
+            get {
+                return ResourceManager.GetString("GreaterSpecificationName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to key {0} not found.
         /// </summary>
         internal static string HasValueNotMatch {
@@ -219,6 +237,24 @@ namespace Specification.Expressions {
         internal static string KeyValueSpecificationValueNull {
             get {
                 return ResourceManager.GetString("KeyValueSpecificationValueNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to le.
+        /// </summary>
+        internal static string LessOrEqualSpecificationName {
+            get {
+                return ResourceManager.GetString("LessOrEqualSpecificationName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to lt.
+        /// </summary>
+        internal static string LessSpecificationName {
+            get {
+                return ResourceManager.GetString("LessSpecificationName", resourceCulture);
             }
         }
         

@@ -28,6 +28,42 @@
                 () => base.VisitEqual(eq));
         }
 
+        public override GreaterSpecification VisitGreater(GreaterSpecification gt)
+        {
+            return this.ReplaceValue(
+                gt,
+                gt.Value,
+                value => new GreaterSpecification(gt.Key, value),
+                () => base.VisitGreater(gt));
+        }
+
+        public override GreaterOrEqualSpecification VisitGreaterOrEqual(GreaterOrEqualSpecification ge)
+        {
+            return this.ReplaceValue(
+                ge,
+                ge.Value,
+                value => new GreaterOrEqualSpecification(ge.Key, value),
+                () => base.VisitGreaterOrEqual(ge));
+        }
+
+        public override LessSpecification VisitLess(LessSpecification lt)
+        {
+            return this.ReplaceValue(
+                lt,
+                lt.Value,
+                value => new LessSpecification(lt.Key, value),
+                () => base.VisitLess(lt));
+        }
+
+        public override LessOrEqualSpecification VisitLessOrEqual(LessOrEqualSpecification le)
+        {
+            return this.ReplaceValue(
+                le,
+                le.Value,
+                value => new LessOrEqualSpecification(le.Key, value),
+                () => base.VisitLessOrEqual(le));
+        }
+
         private TSpec ReplaceValue<TSpec>(
             KeyValueSpecification specification,
             SpecificationValue specValue,

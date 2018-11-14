@@ -31,6 +31,30 @@
                 return not;
             }
 
+            if (value is GreaterSpecification gt)
+            {
+                gt = this.VisitGreater(gt);
+                return gt;
+            }
+
+            if (value is GreaterOrEqualSpecification ge)
+            {
+                ge = this.VisitGreaterOrEqual(ge);
+                return ge;
+            }
+
+            if (value is LessSpecification lt)
+            {
+                lt = this.VisitLess(lt);
+                return lt;
+            }
+
+            if (value is LessOrEqualSpecification le)
+            {
+                le = this.VisitLessOrEqual(le);
+                return le;
+            }
+
             if (value is EqualSpecification eq)
             {
                 eq = this.VisitEqual(eq);
@@ -74,6 +98,26 @@
         public virtual EqualSpecification VisitEqual(EqualSpecification eq)
         {
             return eq;
+        }
+
+        public virtual GreaterSpecification VisitGreater(GreaterSpecification gt)
+        {
+            return gt;
+        }
+
+        public virtual GreaterOrEqualSpecification VisitGreaterOrEqual(GreaterOrEqualSpecification ge)
+        {
+            return ge;
+        }
+
+        public virtual LessSpecification VisitLess(LessSpecification lt)
+        {
+            return lt;
+        }
+
+        public virtual LessOrEqualSpecification VisitLessOrEqual(LessOrEqualSpecification le)
+        {
+            return le;
         }
 
         public virtual OrSpecification VisitOr(OrSpecification or)
