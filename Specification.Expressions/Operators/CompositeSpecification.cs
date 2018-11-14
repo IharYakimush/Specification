@@ -1,4 +1,4 @@
-﻿namespace Specification.Expressions
+﻿namespace Specification.Expressions.Operators
 {
     using System;
     using System.Collections.Generic;

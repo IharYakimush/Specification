@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<and xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Schema.xsd">
+  <or>
+    <eq k="qwe" ref="true"/>
+    <eq k="qwe" ref="true" v="12" m="anyof" t="float" />
+    <eq k="qwe" v="12" m="anyof" t="float" />
+  </or>
+  <hasvalue k="qwe"/>
+  <eq k="qwe" v="qwe" ref="true" />
+</and>

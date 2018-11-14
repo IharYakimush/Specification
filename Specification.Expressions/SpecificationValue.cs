@@ -225,8 +225,25 @@
 
             if (TypeHelper.Mapping.ContainsKey(type))
             {
-                result = Single(value);
-                return true;
+                if (!settings.AssumeType.HasValue || TypeHelper.Mapping[type] == settings.AssumeType.Value)
+                {
+                    result = Single(value);
+                    return true;
+                }
+
+                if (TypeHelper.HasMappingOrCast(value, settings.AssumeType.Value, settings, out object casted))
+                {
+                    result = Single(casted);
+                    return true;
+                }
+
+                result = null;
+                if (settings.IncludeDetails)
+                {
+                    error = string.Format(SpecAbsRes.SpecValueAssumedTypeError, settings.AssumeType.Value, value, type);
+                }
+
+                return false;
             }
 
             if (value is IEnumerable en)
@@ -267,19 +284,14 @@
                 result.Values = resultValues;
                 Type itemType = null;
 
-                for (int i = 0; i < resultValues.Count; i++)
+                if (settings.AssumeType.HasValue)
                 {
-                    if (resultValues[i] == null)
-                    {
-                        if (settings.IncludeDetails)
-                        {
-                            error = string.Format(SpecAbsRes.ValueSpecificationElementNull, i);
-                        }
+                    itemType = TypeHelper.Mapping.Single(p => p.Value == settings.AssumeType.Value).Key;
+                    result.ValueType = settings.AssumeType.Value;
+                }
 
-                        result = null;
-                        return false;
-                    }
-
+                for (int i = 0; i < resultValues.Count; i++)
+                {                    
                     Type currentType = resultValues[i].GetType();
 
                     if (itemType != null)
@@ -289,12 +301,20 @@
                             if (TypeHelper.HasMappingOrCast(resultValues[i], result.ValueType, settings, out object casted))
                             {
                                 resultValues[i] = casted;
+                                currentType = casted.GetType();
                             }
                             else
                             {
                                 if (settings.IncludeDetails)
                                 {
-                                    error = SpecAbsRes.ValueSpecificationMixedTypes;
+                                    if (settings.AssumeType.HasValue)
+                                    {
+                                        error = string.Format(SpecAbsRes.SpecValueAssumedTypeError, settings.AssumeType.Value, resultValues[i], currentType);
+                                    }
+                                    else
+                                    {
+                                        error = SpecAbsRes.ValueSpecificationMixedTypes;
+                                    }
                                 }
 
                                 result = null;
@@ -305,7 +325,7 @@
 
                     itemType = currentType;
 
-                    if (i == 0)
+                    if (i == 0 && !settings.AssumeType.HasValue)
                     {
                         if (TypeHelper.Mapping.ContainsKey(itemType))
                         {

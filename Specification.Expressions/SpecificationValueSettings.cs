@@ -6,6 +6,7 @@
         public bool AllowCast { get; set; } = true;
 
         public bool IncludeDetails { get; set; } = true;
+        public SpecificationValue.DataType? AssumeType { get; set; } = null;
 
         public static SpecificationValueSettings Default { get; } = new SpecificationValueSettings();
 

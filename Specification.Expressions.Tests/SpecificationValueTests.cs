@@ -171,6 +171,94 @@
         }
 
         [Theory]
+        [InlineData("2", 2, true, SpecificationValue.DataType.Int, true, null)]
+        [InlineData("2", 2, false, SpecificationValue.DataType.Int, false, "Unable to assume")]
+        [InlineData("2", 2, false, SpecificationValue.DataType.DateTime, true, "Unable to assume type DateTime for value 2 of type System.String")]
+        [InlineData("2", "2", true, SpecificationValue.DataType.String, true, null)]
+        public void AssumeTypeSingle(
+            object v1,
+            object expectedValue,
+            bool expectedResult,
+            SpecificationValue.DataType? type,
+            bool allowCast,
+            string expectedError)
+        {
+            SpecificationValueSettings settings = new SpecificationValueSettings();
+            settings.AllowCast = allowCast;
+            settings.AssumeType = type;
+
+            bool result = SpecificationValue.TryFrom(
+                v1,
+                settings,
+                out SpecificationValue specification,
+                out string error);
+
+            Assert.Equal(expectedResult, result);
+
+            if (result)
+            {
+                Assert.Contains(expectedValue, specification.Values);
+            }
+            else
+            {
+                Assert.Null(specification);
+            }
+
+            if (expectedError != null)
+            {
+                Assert.Contains(expectedError, error);
+            }
+            else
+            {
+                Assert.Null(error);
+            }
+        }
+
+        [Theory]
+        [InlineData("2", 2, true, SpecificationValue.DataType.Int, true, null)]
+        [InlineData("2", 2, false, SpecificationValue.DataType.Int, false, "Unable to assume")]
+        [InlineData("2", 2, false, SpecificationValue.DataType.DateTime, true, "Unable to assume type DateTime for value 2 of type System.String")]
+        [InlineData("2", "2", true, SpecificationValue.DataType.String, true, null)]
+        public void AssumeTypeArray(
+            object v1,
+            object expectedValue,
+            bool expectedResult,
+            SpecificationValue.DataType? type,
+            bool allowCast,
+            string expectedError)
+        {
+            SpecificationValueSettings settings = new SpecificationValueSettings();
+            settings.AllowCast = allowCast;
+            settings.AssumeType = type;
+
+            bool result = SpecificationValue.TryFrom(
+                new[] { v1 },
+                settings,
+                out SpecificationValue specification,
+                out string error);
+
+            Assert.Equal(expectedResult, result);
+
+            if (result)
+            {
+                Assert.Contains(expectedValue, specification.Values);
+            }
+            else
+            {
+                Assert.Null(specification);
+            }
+
+            if (expectedError != null)
+            {
+                Assert.Contains(expectedError, error);
+            }
+            else
+            {
+                Assert.Null(error);
+            }
+        }
+
+        [Theory]
         [InlineData("k2", true, 1, null)]
         [InlineData("k1", true, 1, null)]
         [InlineData("qwe", false, null, "Key qwe is missing")]

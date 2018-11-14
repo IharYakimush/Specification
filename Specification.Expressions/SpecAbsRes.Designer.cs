@@ -313,6 +313,15 @@ namespace Specification.Expressions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to assume type {0} for value {1} of type {2}.
+        /// </summary>
+        internal static string SpecValueAssumedTypeError {
+            get {
+                return ResourceManager.GetString("SpecValueAssumedTypeError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Circular references detected..
         /// </summary>
         internal static string SpecValueFromCircular {
@@ -418,6 +427,15 @@ namespace Specification.Expressions {
         internal static string ValueSpecificationZeroCount {
             get {
                 return ResourceManager.GetString("ValueSpecificationZeroCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown element {0}..
+        /// </summary>
+        internal static string XmlParseUnknownElement {
+            get {
+                return ResourceManager.GetString("XmlParseUnknownElement", resourceCulture);
             }
         }
     }

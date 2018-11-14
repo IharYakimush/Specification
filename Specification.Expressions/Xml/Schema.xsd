@@ -1,0 +1,118 @@
+﻿<xs:schema attributeFormDefault="unqualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+           elementFormDefault="qualified"
+           vc:minVersion="1.1">
+
+  <xs:complexType name="keySpecification" abstract="true">
+    <xs:attribute name="k" use="required"/>    
+  </xs:complexType>
+
+  <xs:complexType name="valueReference" >
+    <xs:complexContent>
+      <xs:restriction base="keyValueSpec">
+        <xs:attribute name="t" use="prohibited" />
+        <xs:attribute name="m" use="prohibited"  />
+        <xs:attribute name="ref" use="required" type="xs:boolean" />          
+        <xs:attribute name="v" use="required" type="xs:string" />
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="keyValueSpec">
+    <xs:sequence>
+      <xs:element name="v" type="xs:string" minOccurs="0" maxOccurs="unbounded" nillable="true" >
+
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="k" use="required"/>
+    <xs:attribute name="ref" type="xs:boolean"/>
+    <xs:attribute name="t" use="optional" default="string">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="int"/>
+          <xs:enumeration value="float"/>
+          <xs:enumeration value="string"/>
+          <xs:enumeration value="dateTime"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="m" use="optional" default="anyof">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="anyof"/>
+          <xs:enumeration value="allof"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="v" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="hasValueSpec">
+    <xs:attribute name="k" use="required"/>
+  </xs:complexType>
+
+  <xs:group name="keyValueSpecs">
+    <xs:choice>
+      <xs:element name="eq" type="keyValueSpec"/>
+      <xs:element name="ge" type="keyValueSpec"/>
+      <xs:element name="gt" type="keyValueSpec"/>
+      <xs:element name="lt" type="keyValueSpec"/>
+      <xs:element name="le" type="keyValueSpec"/>
+    </xs:choice>
+  </xs:group>
+
+  <xs:group name="binarySpecs">
+    <xs:choice>
+      <xs:element name="or" type="binarySpec"/>
+      <xs:element name="and" type="binarySpec"/>
+    </xs:choice>
+  </xs:group>
+
+  <xs:complexType name="notSpec">
+    <xs:sequence minOccurs="1" maxOccurs="1">
+      <xs:group ref="specifications"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="binarySpec">
+    <xs:sequence minOccurs="2" maxOccurs="unbounded">
+      <xs:choice>
+        <xs:group ref="specifications"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="constSpec">
+   
+  </xs:complexType>
+
+  <xs:group name="consts">
+    <xs:choice>
+      <xs:element name="true" type="constSpec" />
+      <xs:element name="false" type="constSpec" />
+    </xs:choice>
+  </xs:group>
+
+  <xs:group name="specifications">
+    <xs:choice>
+      <xs:group ref="keyValueSpecs"/>
+      <xs:group ref="binarySpecs"/>
+      <xs:group ref="consts"/>
+      <xs:element name="hasvalue" type="hasValueSpec"/>
+      <xs:element name="not" type="notSpec"/>
+    </xs:choice>
+  </xs:group>
+
+  <xs:element name="and" type="binarySpec"/>
+  <xs:element name="or" type="binarySpec"/>
+  <xs:element name="true" type="constSpec"/>
+  <xs:element name="false" type="constSpec"/>
+  <xs:element name="eq" type="keyValueSpec"/>
+  <xs:element name="gt" type="keyValueSpec"/>
+  <xs:element name="ge" type="keyValueSpec"/>
+  <xs:element name="lt" type="keyValueSpec"/>
+  <xs:element name="le" type="keyValueSpec"/>
+  <xs:element name="not" type="notSpec"/>
+
+</xs:schema>
