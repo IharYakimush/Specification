@@ -190,8 +190,7 @@
 
         private static string GetKey(XElement element, string ns)
         {
-            var xAttributes = element.Attributes().ToArray();
-            return xAttributes.Single(at => at.Name.LocalName == Consts.Key && (at.Name.Namespace == ns || at.Name.Namespace == string.Empty)).Value;
+            return element.Attributes().Single(at => at.Name.LocalName == Consts.Key && (at.Name.Namespace == ns || at.Name.Namespace == string.Empty)).Value;
         }
 
         private static bool GetRef(XElement element, string ns)
