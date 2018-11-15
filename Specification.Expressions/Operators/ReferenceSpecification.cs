@@ -14,7 +14,17 @@
 
         public override SpecificationResult Evaluate(IReadOnlyDictionary<string, object> values, SpecificationEvaluationSettings settings)
         {
-            return Resolve(this, new HashSet<string>(), values, settings);
+            if (this.TryResolve(out Specification result, values, out string error, settings.IncludeDetails || settings.ThrowReferenceErrors))
+            {
+                return result.Evaluate(values, settings);
+            }
+
+            if (settings.ThrowReferenceErrors)
+            {
+                throw new InvalidOperationException(error);
+            }
+
+            return SpecificationResult.False(settings.IncludeDetails ? error : null);
         }
 
         public override string ToString()
@@ -22,30 +32,24 @@
             return $"ref({this.Key})";
         }
 
-        private static SpecificationResult Resolve(
-            ReferenceSpecification reference, 
-            HashSet<string> processed,
-            IReadOnlyDictionary<string, object> values, 
-            SpecificationEvaluationSettings settings)
+        public bool TryResolve(out Specification result, IReadOnlyDictionary<string, object> values, out string error, bool includeDetails = true)
         {
+            return TryResolveInternal(this, new HashSet<string>(), values, out result, out error, includeDetails);
+        }
+
+        private static bool TryResolveInternal(ReferenceSpecification reference, HashSet<string> processed, IReadOnlyDictionary<string, object> values, out Specification result, out string error, bool includeDetails)
+        {
+            result = null;
+            error = null;
             if (processed.Contains(reference.Key))
             {
-                if (settings.ThrowReferenceErrors)
-                {
-                    throw new InvalidOperationException(
-                        string.Format(
-                            SpecAbsRes.ReferenceSpecificationCircular,
-                            reference.Key,
-                            string.Join(", ", processed)));
-                }
-
-                return SpecificationResult.False(
-                    settings.IncludeDetails
-                        ? string.Format(
-                            SpecAbsRes.ReferenceSpecificationCircular,
-                            reference.Key,
-                            string.Join(", ", processed))
-                        : null);
+                error = includeDetails
+                            ? string.Format(
+                                SpecAbsRes.ReferenceSpecificationCircular,
+                                reference.Key,
+                                string.Join(", ", processed))
+                            : null;
+                return false;
             }
 
             processed.Add(reference.Key);
@@ -56,54 +60,33 @@
 
                 if (value == null)
                 {
-                    if (settings.ThrowReferenceErrors)
-                    {
-                        throw new InvalidOperationException(
-                            string.Format(
-                                SpecAbsRes.ReferenceSpecificationNull,
-                                reference.Key));
-                    }
-
-                    return SpecificationResult.False(
-                        settings.IncludeDetails
-                            ? string.Format(
-                                SpecAbsRes.ReferenceSpecificationNull,
-                                reference.Key)
-                            : null);
+                    error = includeDetails ? string.Format(SpecAbsRes.ReferenceSpecificationNull, reference.Key) : null;
+                    return false;
                 }
 
                 if (value is Specification sp)
                 {
                     if (value is ReferenceSpecification next)
                     {
-                        return Resolve(next, processed, values, settings);
+                        return TryResolveInternal(next, processed, values, out result, out error, includeDetails);
                     }
 
-                    return sp.Evaluate(values, settings);
+                    result = sp;
+                    return true;
                 }
 
-                if (settings.ThrowReferenceErrors)
-                {
-                    throw new InvalidOperationException(
-                        string.Format(SpecAbsRes.ReferenceSpecificationNotSpec, reference.Key, value, value.GetType()));
-                }
-
-                return SpecificationResult.False(
-                    settings.IncludeDetails
-                        ? string.Format(SpecAbsRes.ReferenceSpecificationNotSpec, reference.Key, value, value.GetType())
-                        : null);
+                error = includeDetails
+                            ? string.Format(
+                                SpecAbsRes.ReferenceSpecificationNotSpec,
+                                reference.Key,
+                                value,
+                                value.GetType())
+                            : null;
+                return false;
             }
 
-            if (settings.ThrowReferenceErrors)
-            {
-                throw new InvalidOperationException(
-                    string.Format(SpecAbsRes.ReferenceSpecificationMissingKey, reference.Key));
-            }
-
-            return SpecificationResult.False(
-                settings.IncludeDetails
-                    ? string.Format(SpecAbsRes.ReferenceSpecificationMissingKey, reference.Key)
-                    : null);
+            error = includeDetails ? string.Format(SpecAbsRes.ReferenceSpecificationMissingKey, reference.Key) : null;
+            return false;
         }
     }
 }
