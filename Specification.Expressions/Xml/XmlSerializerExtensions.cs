@@ -1,11 +1,9 @@
-﻿namespace Specification.Expressions.Xml
+﻿namespace Specification.Expressions
 {
     using System;
-    using System.IO;
     using System.Text;
     using System.Xml;
-
-    using global::Specification.Expressions.Visitors;
+    using Xml;
 
     public static class XmlSerializerExtensions
     {

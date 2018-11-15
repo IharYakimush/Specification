@@ -4,15 +4,15 @@
            elementFormDefault="qualified"
            vc:minVersion="1.1">
 
-  <xs:complexType name="keySpecification" abstract="true">
-    <xs:attribute name="k" use="required"/>    
+  <xs:complexType name="keySpecification">
+    <xs:attribute name="key" use="required"/>    
   </xs:complexType>
 
   <xs:complexType name="valueReference" >
     <xs:complexContent>
       <xs:extension base="keySpecification">
         <xs:attribute name="ref" type="xs:boolean" use="required"/>
-        <xs:attribute name="v" type="xs:string" use="required"/>
+        <xs:attribute name="value" type="xs:string" use="required"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -45,7 +45,7 @@
   <xs:complexType name="valueSingle" >
     <xs:complexContent>
       <xs:extension base="valueWithType">
-        <xs:attribute name="v" type="xs:string" use="required"/>
+        <xs:attribute name="value" type="xs:string" use="required"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -54,7 +54,7 @@
     <xs:complexContent>
       <xs:extension base="valueWithType">
         <xs:sequence>
-          <xs:element name="v" type="xs:string" minOccurs="2" maxOccurs="unbounded" /> 
+          <xs:element name="value" type="xs:string" minOccurs="2" maxOccurs="unbounded" /> 
         </xs:sequence>
       </xs:extension>      
     </xs:complexContent>
@@ -64,16 +64,12 @@
     <xs:complexContent>
       <xs:extension base="valueWithType">
         <xs:sequence>
-          <xs:element name="v" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+          <xs:element name="value" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
         </xs:sequence>
-        <xs:attribute name="v" type="xs:string" use="optional"/>
+        <xs:attribute name="value" type="xs:string" use="optional"/>
         <xs:attribute name="ref" type="xs:boolean" use="optional"/>
       </xs:extension>
     </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="hasValueSpec">
-    <xs:attribute name="k" use="required"/>
   </xs:complexType>
 
   <xs:group name="keyValueSpecs">
@@ -123,7 +119,7 @@
       <xs:group ref="keyValueSpecs"/>
       <xs:group ref="binarySpecs"/>
       <xs:group ref="consts"/>
-      <xs:element name="hasvalue" type="hasValueSpec"/>
+      <xs:element name="hasvalue" type="keySpecification"/>
       <xs:element name="not" type="notSpec"/>
     </xs:choice>
   </xs:group>

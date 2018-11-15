@@ -225,13 +225,13 @@
 
             if (TypeHelper.Mapping.ContainsKey(type))
             {
-                if (!settings.AssumeType.HasValue || TypeHelper.Mapping[type] == settings.AssumeType.Value)
+                if (!settings.ExpectedType.HasValue || TypeHelper.Mapping[type] == settings.ExpectedType.Value)
                 {
                     result = Single(value);
                     return true;
                 }
 
-                if (TypeHelper.HasMappingOrCast(value, settings.AssumeType.Value, settings, out object casted))
+                if (TypeHelper.HasMappingOrCast(value, settings.ExpectedType.Value, settings, out object casted))
                 {
                     result = Single(casted);
                     return true;
@@ -240,7 +240,7 @@
                 result = null;
                 if (settings.IncludeDetails)
                 {
-                    error = string.Format(SpecAbsRes.SpecValueAssumedTypeError, settings.AssumeType.Value, value, type);
+                    error = string.Format(SpecAbsRes.SpecValueAssumedTypeError, settings.ExpectedType.Value, value, type);
                 }
 
                 return false;
@@ -284,10 +284,10 @@
                 result.Values = resultValues;
                 Type itemType = null;
 
-                if (settings.AssumeType.HasValue)
+                if (settings.ExpectedType.HasValue)
                 {
-                    itemType = TypeHelper.Mapping.Single(p => p.Value == settings.AssumeType.Value).Key;
-                    result.ValueType = settings.AssumeType.Value;
+                    itemType = TypeHelper.Mapping.Single(p => p.Value == settings.ExpectedType.Value).Key;
+                    result.ValueType = settings.ExpectedType.Value;
                 }
 
                 for (int i = 0; i < resultValues.Count; i++)
@@ -307,9 +307,9 @@
                             {
                                 if (settings.IncludeDetails)
                                 {
-                                    if (settings.AssumeType.HasValue)
+                                    if (settings.ExpectedType.HasValue)
                                     {
-                                        error = string.Format(SpecAbsRes.SpecValueAssumedTypeError, settings.AssumeType.Value, resultValues[i], currentType);
+                                        error = string.Format(SpecAbsRes.SpecValueAssumedTypeError, settings.ExpectedType.Value, resultValues[i], currentType);
                                     }
                                     else
                                     {
@@ -325,7 +325,7 @@
 
                     itemType = currentType;
 
-                    if (i == 0 && !settings.AssumeType.HasValue)
+                    if (i == 0 && !settings.ExpectedType.HasValue)
                     {
                         if (TypeHelper.Mapping.ContainsKey(itemType))
                         {

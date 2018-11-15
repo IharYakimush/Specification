@@ -17,8 +17,8 @@
         public const string False = "false";
         public const string HasValue = "hasvalue";
         public const string Ref = "ref";
-        public const string Key = "k";
-        public const string Value = "v";
+        public const string Key = "key";
+        public const string Value = "value";
         public const string Type = "t";
         public const string Mul = "m";
 

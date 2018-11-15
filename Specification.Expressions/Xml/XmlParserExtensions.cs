@@ -1,4 +1,4 @@
-﻿namespace Specification.Expressions.Xml
+﻿namespace Specification.Expressions
 {
     using System;
     using System.Collections;
@@ -146,7 +146,7 @@
                                      AllowCast = true,
                                      DefaultMultiplicity = mul,
                                      IncludeDetails = true,
-                                     AssumeType = type
+                                     ExpectedType = type
                                  });
 
                     if (!SpecificationValue.TryFrom(

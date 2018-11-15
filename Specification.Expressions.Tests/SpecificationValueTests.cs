@@ -185,7 +185,7 @@
         {
             SpecificationValueSettings settings = new SpecificationValueSettings();
             settings.AllowCast = allowCast;
-            settings.AssumeType = type;
+            settings.ExpectedType = type;
 
             bool result = SpecificationValue.TryFrom(
                 v1,
@@ -229,7 +229,7 @@
         {
             SpecificationValueSettings settings = new SpecificationValueSettings();
             settings.AllowCast = allowCast;
-            settings.AssumeType = type;
+            settings.ExpectedType = type;
 
             bool result = SpecificationValue.TryFrom(
                 new[] { v1 },
