@@ -7,13 +7,13 @@
 
     using global::Specification.Expressions.Operators;
 
-    public class ValuePlaceholderVisitor : SpecificationVisitor
+    public class ValueReferenceVisitor : SpecificationVisitor
     {
         public IReadOnlyDictionary<string, object> Values { get; }
 
         public SpecificationEvaluationSettings Settings { get; }
 
-        public ValuePlaceholderVisitor(IReadOnlyDictionary<string, object> values, SpecificationEvaluationSettings settings = null)
+        public ValueReferenceVisitor(IReadOnlyDictionary<string, object> values, SpecificationEvaluationSettings settings = null)
         {
             this.Values = values ?? throw new ArgumentNullException(nameof(values));
             this.Settings = settings ?? SpecificationEvaluationSettings.Default;

@@ -8,7 +8,7 @@
 
     using Xunit;
 
-    public class ValuePlaceholderVisitorTests
+    public class ValueReferenceVisitorTests
     {
         [Fact]
         public void ReplaceString()
@@ -17,8 +17,8 @@
                 "k1",
                 SpecificationValue.Ref("{p1}"));
 
-            ValuePlaceholderVisitor visitor =
-                new ValuePlaceholderVisitor(new Dictionary<string, object> { { "{p1}", "v1" } });
+            ValueReferenceVisitor visitor =
+                new ValueReferenceVisitor(new Dictionary<string, object> { { "{p1}", "v1" } });
 
             Specification result = visitor.Visit(equal);
 
@@ -38,8 +38,8 @@
                 "k1",
                 SpecificationValue.Ref("{p1}"));
 
-            ValuePlaceholderVisitor visitor =
-                new ValuePlaceholderVisitor(new Dictionary<string, object> { { "{p1}", new[] { "v1", "v2" } } });
+            ValueReferenceVisitor visitor =
+                new ValueReferenceVisitor(new Dictionary<string, object> { { "{p1}", new[] { "v1", "v2" } } });
 
             Specification result = visitor.Visit(equal);
 
@@ -60,7 +60,7 @@
                 "k1",
                 SpecificationValue.Ref("{p1}"));
 
-            ValuePlaceholderVisitor visitor = new ValuePlaceholderVisitor(
+            ValueReferenceVisitor visitor = new ValueReferenceVisitor(
                 new Dictionary<string, object> { { "{p1}", SpecificationValue.Single("v1") } });
 
             Specification result = visitor.Visit(equal);
@@ -81,7 +81,7 @@
                 "k1",
                 SpecificationValue.Ref("{p1}"));
 
-            ValuePlaceholderVisitor visitor = new ValuePlaceholderVisitor(
+            ValueReferenceVisitor visitor = new ValueReferenceVisitor(
                 new Dictionary<string, object> { { "{p1}", SpecificationValue.AnyOf("v1", "v2") } });
 
             Specification result = visitor.Visit(equal);
@@ -103,8 +103,8 @@
                 "k1",
                 SpecificationValue.Ref("{p1}"));
 
-            ValuePlaceholderVisitor visitor =
-                new ValuePlaceholderVisitor(new Dictionary<string, object> { { "{p1}", 2 } });
+            ValueReferenceVisitor visitor =
+                new ValueReferenceVisitor(new Dictionary<string, object> { { "{p1}", 2 } });
 
             Specification result = visitor.Visit(equal);
 
@@ -122,12 +122,12 @@
                 "k1",
                 SpecificationValue.Ref("{p1}"));
 
-            ValuePlaceholderVisitor visitor =
-                new ValuePlaceholderVisitor(new Dictionary<string, object> { { "{p2}", "v1" } });
+            ValueReferenceVisitor visitor =
+                new ValueReferenceVisitor(new Dictionary<string, object> { { "{p2}", "v1" } });
 
             InvalidOperationException exc = Assert.Throws<InvalidOperationException>(() => visitor.Visit(equal));
 
-            Assert.Contains("Unable to resolve reference for k1 equal ref({p1}). Key {p1} is missing", exc.Message);            
+            Assert.Contains("Unable to resolve value reference for k1 equal ref({p1}). Key {p1} is missing", exc.Message);            
         }
 
         [Fact]
@@ -137,7 +137,7 @@
                 "k1",
                 SpecificationValue.Ref("{p1}"));
 
-            ValuePlaceholderVisitor visitor = new ValuePlaceholderVisitor(
+            ValueReferenceVisitor visitor = new ValueReferenceVisitor(
                 new Dictionary<string, object> { { "{p2}", "v1" } },
                 new SpecificationEvaluationSettings { ThrowValueErrors = false });
 
@@ -156,12 +156,12 @@
                 "k1",
                 SpecificationValue.Ref("{p1}"));
 
-            ValuePlaceholderVisitor visitor =
-                new ValuePlaceholderVisitor(new Dictionary<string, object> { { "{p1}", TimeSpan.FromDays(1) } });
+            ValueReferenceVisitor visitor =
+                new ValueReferenceVisitor(new Dictionary<string, object> { { "{p1}", TimeSpan.FromDays(1) } });
 
             InvalidOperationException exc = Assert.Throws<InvalidOperationException>(() => visitor.Visit(equal));
 
-            Assert.Contains("Unable to resolve reference for k1 equal ref({p1}). Value of type System.TimeSpan not supported.", exc.Message);
+            Assert.Contains("Unable to resolve value reference for k1 equal ref({p1}). Value of type System.TimeSpan not supported.", exc.Message);
         }
 
         [Fact]
@@ -171,7 +171,7 @@
                 "k1",
                 SpecificationValue.Ref("{p1}"));
 
-            ValuePlaceholderVisitor visitor = new ValuePlaceholderVisitor(
+            ValueReferenceVisitor visitor = new ValueReferenceVisitor(
                 new Dictionary<string, object>
                     {
                         { "{p1}", SpecificationValue.Ref("{p2}") },
@@ -197,7 +197,7 @@
                 "k1",
                 SpecificationValue.Ref("{p1}"));
 
-            ValuePlaceholderVisitor visitor = new ValuePlaceholderVisitor(
+            ValueReferenceVisitor visitor = new ValueReferenceVisitor(
                 new Dictionary<string, object>
                     {
                         { "{p1}", SpecificationValue.Ref("{p2}") },
@@ -222,7 +222,7 @@
                 "k1",
                 SpecificationValue.Ref("{p1}"));
 
-            ValuePlaceholderVisitor visitor = new ValuePlaceholderVisitor(
+            ValueReferenceVisitor visitor = new ValueReferenceVisitor(
                 new Dictionary<string, object>
                     {
                         { "{p1}", SpecificationValue.Ref("{p2}") },
@@ -243,7 +243,7 @@
                 "k1",
                 SpecificationValue.Ref("{p1}"));
 
-            ValuePlaceholderVisitor visitor = new ValuePlaceholderVisitor(
+            ValueReferenceVisitor visitor = new ValueReferenceVisitor(
                 new Dictionary<string, object>
                     {
                         { "{p1}", SpecificationValue.Ref("{p2}") },

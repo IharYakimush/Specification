@@ -47,7 +47,7 @@
         public override HasValueSpecification VisitHasValue(HasValueSpecification hv)
         {
             this.XmlWriter.WriteStartElement(Consts.HasValue, this.NameSpace);
-            this.WriteKey(hv);
+            this.WriteKey(hv.Key);
             this.XmlWriter.WriteEndElement();
             return hv;
         }
@@ -97,18 +97,27 @@
             return le;
         }
 
+        public override ReferenceSpecification VisitReference(ReferenceSpecification rf)
+        {
+            this.XmlWriter.WriteStartElement(Consts.Ref, this.NameSpace);
+            this.WriteKey(rf.Key);
+
+            this.XmlWriter.WriteEndElement();
+            return rf;
+        }
+
         private void WriteKeyValueSpecification(KeyValueSpecification specification, string name)
         {
             this.XmlWriter.WriteStartElement(name, this.NameSpace);
-            this.WriteKey(specification);
+            this.WriteKey(specification.Key);
             this.WriteValue(specification.Value);
 
             this.XmlWriter.WriteEndElement();
         }
 
-        private void WriteKey(KeySpecification kv)
+        private void WriteKey(string key)
         {
-            this.XmlWriter.WriteAttributeString(Consts.Key, kv.Key);
+            this.XmlWriter.WriteAttributeString(Consts.Key, key);
         }
 
         private void WriteValue(SpecificationValue value)

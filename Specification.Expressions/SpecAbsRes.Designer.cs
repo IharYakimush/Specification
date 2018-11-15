@@ -259,7 +259,7 @@ namespace Specification.Expressions {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to resolve reference for {0}. {1}.
+        ///   Looks up a localized string similar to Unable to resolve value reference for {0}. {1}.
         /// </summary>
         internal static string MissingReference {
             get {
@@ -309,6 +309,42 @@ namespace Specification.Expressions {
         internal static string RefCircularDep {
             get {
                 return ResourceManager.GetString("RefCircularDep", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to resolve specification reference for {0}. Circular reference detected in keys {1}..
+        /// </summary>
+        internal static string ReferenceSpecificationCircular {
+            get {
+                return ResourceManager.GetString("ReferenceSpecificationCircular", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to resolve specification reference for {0}. Key not found..
+        /// </summary>
+        internal static string ReferenceSpecificationMissingKey {
+            get {
+                return ResourceManager.GetString("ReferenceSpecificationMissingKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to resolve specification reference for {0}. Value {1} of type {2} is not a specification..
+        /// </summary>
+        internal static string ReferenceSpecificationNotSpec {
+            get {
+                return ResourceManager.GetString("ReferenceSpecificationNotSpec", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to resolve specification reference for {0}. Value is null..
+        /// </summary>
+        internal static string ReferenceSpecificationNull {
+            get {
+                return ResourceManager.GetString("ReferenceSpecificationNull", resourceCulture);
             }
         }
         

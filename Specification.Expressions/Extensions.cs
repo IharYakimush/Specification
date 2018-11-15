@@ -21,9 +21,21 @@
             this Specification specification,
             IReadOnlyDictionary<string, object> values)
         {
-            ValuePlaceholderVisitor visitor = new ValuePlaceholderVisitor(values);
+            ValueReferenceVisitor visitor = new ValueReferenceVisitor(values);
 
             return visitor.Visit(specification);
+        }
+
+        public static bool HasValueRefs(
+            this Specification specification)
+        {
+            return ValueReferenceCheckVisitor.Instance.Visit(specification);
+        }
+
+        public static bool HasSpecificationRefs(
+            this Specification specification)
+        {
+            return SpecificationReferenceCheckVisitor.Instance.Visit(specification);
         }
     }
 }

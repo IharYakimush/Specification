@@ -235,7 +235,19 @@
     <value>Unable to resolve placeholder in {0}. See inner exception</value>
   </data>
   <data name="MissingReference" xml:space="preserve">
-    <value>Unable to resolve reference for {0}. {1}</value>
+    <value>Unable to resolve value reference for {0}. {1}</value>
+  </data>
+  <data name="ReferenceSpecificationMissingKey" xml:space="preserve">
+    <value>Unable to resolve specification reference for {0}. Key not found.</value>
+  </data>
+  <data name="ReferenceSpecificationCircular" xml:space="preserve">
+    <value>Unable to resolve specification reference for {0}. Circular reference detected in keys {1}.</value>
+  </data>
+  <data name="ReferenceSpecificationNotSpec" xml:space="preserve">
+    <value>Unable to resolve specification reference for {0}. Value {1} of type {2} is not a specification.</value>
+  </data>
+  <data name="ReferenceSpecificationNull" xml:space="preserve">
+    <value>Unable to resolve specification reference for {0}. Value is null.</value>
   </data>
   <data name="RefCircularDep" xml:space="preserve">
     <value>Circular references detected. Processed values: {0}</value>

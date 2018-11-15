@@ -94,6 +94,11 @@
                 return new HasValueSpecification(GetKey(element, ns));
             }
 
+            if (element.Name.LocalName == Consts.Ref)
+            {
+                return new ReferenceSpecification(GetKey(element, ns));
+            }
+
             if (element.Name.LocalName == Consts.True)
             {
                 return ConstantSpecification.True;

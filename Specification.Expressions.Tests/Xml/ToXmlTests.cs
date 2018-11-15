@@ -13,6 +13,7 @@
         public void ToXmlStringDefault()
         {
             Specification specification = new AndSpecification(
+                new ReferenceSpecification("rv"),
                 new OrSpecification(
                     new EqualSpecification("k1", SpecificationValue.AnyOf(1, 2, 3)),
                     new EqualSpecification("k2", SpecificationValue.AllOf(1, 2, 3))),

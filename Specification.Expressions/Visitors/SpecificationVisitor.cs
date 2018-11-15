@@ -73,7 +73,18 @@
                 return cs;
             }
 
+            if (value is ReferenceSpecification rf)
+            {
+                rf = this.VisitReference(rf);
+                return rf;
+            }
+
             throw new InvalidOperationException();
+        }
+
+        public virtual ReferenceSpecification VisitReference(ReferenceSpecification rf)
+        {
+            return rf;
         }
 
         public virtual ConstantSpecification VisitConstant(ConstantSpecification cs)

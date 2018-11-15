@@ -120,6 +120,7 @@
       <xs:group ref="binarySpecs"/>
       <xs:group ref="consts"/>
       <xs:element name="hasvalue" type="keySpecification"/>
+      <xs:element name="ref" type="keySpecification"/>
       <xs:element name="not" type="notSpec"/>
     </xs:choice>
   </xs:group>
@@ -134,5 +135,7 @@
   <xs:element name="lt" type="keyValueSpec"/>
   <xs:element name="le" type="keyValueSpec"/>
   <xs:element name="not" type="notSpec"/>
+  <xs:element name="hasvalue" type="keySpecification"/>
+  <xs:element name="ref" type="keySpecification"/>
 
 </xs:schema>
