@@ -14,90 +14,79 @@
             this.VisitWithoutModification(value);
 
             if (value is AndSpecification and)
-            {
-                and = this.VisitAnd(and);
-                return and;
+            { 
+                return this.VisitAnd(and);
             }
 
             if (value is OrSpecification or)
             {
-                or = this.VisitOr(or);
-                return or;
+                return this.VisitOr(or);
             }
 
             if (value is NotSpecification not)
             {
-                not = this.VisitNot(not);
-                return not;
+                return this.VisitNot(not);
             }
 
             if (value is GreaterSpecification gt)
-            {
-                gt = this.VisitGreater(gt);
-                return gt;
+            {                
+                return this.VisitGreater(gt);
             }
 
             if (value is GreaterOrEqualSpecification ge)
-            {
-                ge = this.VisitGreaterOrEqual(ge);
-                return ge;
+            {                
+                return this.VisitGreaterOrEqual(ge);
             }
 
             if (value is LessSpecification lt)
             {
-                lt = this.VisitLess(lt);
-                return lt;
+                return this.VisitLess(lt);
             }
 
             if (value is LessOrEqualSpecification le)
             {
-                le = this.VisitLessOrEqual(le);
-                return le;
+                return this.VisitLessOrEqual(le);
             }
 
             if (value is EqualSpecification eq)
             {
-                eq = this.VisitEqual(eq);
-                return eq;
+                return this.VisitEqual(eq);
             }
 
             if (value is HasValueSpecification hv)
             {
-                hv = this.VisitHasValue(hv);
-                return hv;
+                return this.VisitHasValue(hv);
             }
 
             if (value is ConstantSpecification cs)
             {
-                cs = this.VisitConstant(cs);
-                return cs;
+                return this.VisitConstant(cs);
             }
 
             if (value is ReferenceSpecification rf)
             {
-                rf = this.VisitReference(rf);
-                return rf;
+                return this.VisitReference(rf);
             }
 
             throw new InvalidOperationException();
         }
 
-        public virtual ReferenceSpecification VisitReference(ReferenceSpecification rf)
+        public virtual Specification VisitReference(ReferenceSpecification rf)
         {
             return rf;
         }
 
-        public virtual ConstantSpecification VisitConstant(ConstantSpecification cs)
+        public virtual Specification VisitConstant(ConstantSpecification cs)
         {
             return cs;
         }
 
-        public virtual NotSpecification VisitNot(NotSpecification not)
+        public virtual Specification VisitNot(NotSpecification not)
         {
             return new NotSpecification(this.Visit(not.Specification));
         }
 
-        public virtual HasValueSpecification VisitHasValue(HasValueSpecification hv)
+        public virtual Specification VisitHasValue(HasValueSpecification hv)
         {
             return hv;
         }
@@ -106,37 +95,37 @@
         {            
         }
 
-        public virtual EqualSpecification VisitEqual(EqualSpecification eq)
+        public virtual Specification VisitEqual(EqualSpecification eq)
         {
             return eq;
         }
 
-        public virtual GreaterSpecification VisitGreater(GreaterSpecification gt)
+        public virtual Specification VisitGreater(GreaterSpecification gt)
         {
             return gt;
         }
 
-        public virtual GreaterOrEqualSpecification VisitGreaterOrEqual(GreaterOrEqualSpecification ge)
+        public virtual Specification VisitGreaterOrEqual(GreaterOrEqualSpecification ge)
         {
             return ge;
         }
 
-        public virtual LessSpecification VisitLess(LessSpecification lt)
+        public virtual Specification VisitLess(LessSpecification lt)
         {
             return lt;
         }
 
-        public virtual LessOrEqualSpecification VisitLessOrEqual(LessOrEqualSpecification le)
+        public virtual Specification VisitLessOrEqual(LessOrEqualSpecification le)
         {
             return le;
         }
 
-        public virtual OrSpecification VisitOr(OrSpecification or)
+        public virtual Specification VisitOr(OrSpecification or)
         {
             return new OrSpecification(or.Specifications.Select(this.Visit));
         }
 
-        public virtual AndSpecification VisitAnd(AndSpecification and)
+        public virtual Specification VisitAnd(AndSpecification and)
         {
             return new AndSpecification(and.Specifications.Select(this.Visit));
         }

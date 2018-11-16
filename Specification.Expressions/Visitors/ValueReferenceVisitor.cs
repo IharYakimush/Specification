@@ -19,7 +19,7 @@
             this.Settings = settings ?? SpecificationEvaluationSettings.Default;
         }
 
-        public override EqualSpecification VisitEqual(EqualSpecification eq)
+        public override Specification VisitEqual(EqualSpecification eq)
         {
             return this.ReplaceValue(
                 eq,
@@ -28,7 +28,7 @@
                 () => base.VisitEqual(eq));
         }
 
-        public override GreaterSpecification VisitGreater(GreaterSpecification gt)
+        public override Specification VisitGreater(GreaterSpecification gt)
         {
             return this.ReplaceValue(
                 gt,
@@ -37,7 +37,7 @@
                 () => base.VisitGreater(gt));
         }
 
-        public override GreaterOrEqualSpecification VisitGreaterOrEqual(GreaterOrEqualSpecification ge)
+        public override Specification VisitGreaterOrEqual(GreaterOrEqualSpecification ge)
         {
             return this.ReplaceValue(
                 ge,
@@ -46,7 +46,7 @@
                 () => base.VisitGreaterOrEqual(ge));
         }
 
-        public override LessSpecification VisitLess(LessSpecification lt)
+        public override Specification VisitLess(LessSpecification lt)
         {
             return this.ReplaceValue(
                 lt,
@@ -55,7 +55,7 @@
                 () => base.VisitLess(lt));
         }
 
-        public override LessOrEqualSpecification VisitLessOrEqual(LessOrEqualSpecification le)
+        public override Specification VisitLessOrEqual(LessOrEqualSpecification le)
         {
             return this.ReplaceValue(
                 le,
@@ -64,11 +64,11 @@
                 () => base.VisitLessOrEqual(le));
         }
 
-        private TSpec ReplaceValue<TSpec>(
+        private Specification ReplaceValue<TSpec>(
             KeyValueSpecification specification,
             SpecificationValue specValue,
             Func<SpecificationValue, TSpec> factory,
-            Func<TSpec> baseFactory)
+            Func<Specification> baseFactory)
             where TSpec : KeyValueSpecification
         {
             if (specValue.IsReference)

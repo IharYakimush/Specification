@@ -17,7 +17,7 @@
             this.NameSpace = nameSpace ?? string.Empty;
         }
 
-        public override AndSpecification VisitAnd(AndSpecification and)
+        public override Specification VisitAnd(AndSpecification and)
         {
             this.XmlWriter.WriteStartElement(Consts.And, this.NameSpace);
             var result = base.VisitAnd(and);
@@ -26,7 +26,7 @@
             return result;
         }
 
-        public override OrSpecification VisitOr(OrSpecification or)
+        public override Specification VisitOr(OrSpecification or)
         {
             this.XmlWriter.WriteStartElement(Consts.Or, this.NameSpace);
             var result = base.VisitOr(or);
@@ -35,7 +35,7 @@
             return result;
         }
 
-        public override ConstantSpecification VisitConstant(ConstantSpecification cs)
+        public override Specification VisitConstant(ConstantSpecification cs)
         {
             this.XmlWriter.WriteStartElement(cs.Value.ToString().ToLowerInvariant(), this.NameSpace);
 
@@ -44,7 +44,7 @@
             return cs;
         }
 
-        public override HasValueSpecification VisitHasValue(HasValueSpecification hv)
+        public override Specification VisitHasValue(HasValueSpecification hv)
         {
             this.XmlWriter.WriteStartElement(Consts.HasValue, this.NameSpace);
             this.WriteKey(hv.Key);
@@ -52,7 +52,7 @@
             return hv;
         }
 
-        public override NotSpecification VisitNot(NotSpecification not)
+        public override Specification VisitNot(NotSpecification not)
         {
             this.XmlWriter.WriteStartElement(Consts.Not, this.NameSpace);
 
@@ -62,42 +62,42 @@
             return result;
         }
 
-        public override EqualSpecification VisitEqual(EqualSpecification eq)
+        public override Specification VisitEqual(EqualSpecification eq)
         {
             this.WriteKeyValueSpecification(eq, Consts.Eq);
 
             return eq;
         }
 
-        public override GreaterSpecification VisitGreater(GreaterSpecification gt)
+        public override Specification VisitGreater(GreaterSpecification gt)
         {
             this.WriteKeyValueSpecification(gt, Consts.Gt);
 
             return gt;
         }
 
-        public override GreaterOrEqualSpecification VisitGreaterOrEqual(GreaterOrEqualSpecification ge)
+        public override Specification VisitGreaterOrEqual(GreaterOrEqualSpecification ge)
         {
             this.WriteKeyValueSpecification(ge, Consts.Ge);
 
             return ge;
         }
 
-        public override LessSpecification VisitLess(LessSpecification lt)
+        public override Specification VisitLess(LessSpecification lt)
         {
             this.WriteKeyValueSpecification(lt, Consts.Lt);
 
             return lt;
         }
 
-        public override LessOrEqualSpecification VisitLessOrEqual(LessOrEqualSpecification le)
+        public override Specification VisitLessOrEqual(LessOrEqualSpecification le)
         {
             this.WriteKeyValueSpecification(le, Consts.Le);
 
             return le;
         }
 
-        public override ReferenceSpecification VisitReference(ReferenceSpecification rf)
+        public override Specification VisitReference(ReferenceSpecification rf)
         {
             this.XmlWriter.WriteStartElement(Consts.Ref, this.NameSpace);
             this.WriteKey(rf.Key);

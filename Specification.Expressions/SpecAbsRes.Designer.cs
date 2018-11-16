@@ -268,6 +268,15 @@ namespace Specification.Expressions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to resolve specification reference for {0}. {1}.
+        /// </summary>
+        internal static string MissingSpecReference {
+            get {
+                return ResourceManager.GetString("MissingSpecReference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to not/{0}.
         /// </summary>
         internal static string NotNotMatch {

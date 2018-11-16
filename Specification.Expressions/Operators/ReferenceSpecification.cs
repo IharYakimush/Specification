@@ -3,6 +3,8 @@
     using System;
     using System.Collections.Generic;
 
+    using global::Specification.Expressions.Visitors;
+
     public class ReferenceSpecification : Specification
     {
         public string Key { get; }
@@ -35,6 +37,15 @@
         public bool TryResolve(out Specification result, IReadOnlyDictionary<string, object> values, out string error, bool includeDetails = true)
         {
             return TryResolveInternal(this, new HashSet<string>(), values, out result, out error, includeDetails);
+        }
+
+        public Specification ResolveSpecificationRefs(
+            IReadOnlyDictionary<string, object> values,
+            SpecificationEvaluationSettings settings = null)
+        {
+            SpecificationReferenceVisitor visitor = new SpecificationReferenceVisitor(values, settings);
+
+            return visitor.Visit(this);
         }
 
         private static bool TryResolveInternal(ReferenceSpecification reference, HashSet<string> processed, IReadOnlyDictionary<string, object> values, out Specification result, out string error, bool includeDetails)

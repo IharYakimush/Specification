@@ -237,6 +237,9 @@
   <data name="MissingReference" xml:space="preserve">
     <value>Unable to resolve value reference for {0}. {1}</value>
   </data>
+  <data name="MissingSpecReference" xml:space="preserve">
+    <value>Unable to resolve specification reference for {0}. {1}</value>
+  </data>
   <data name="ReferenceSpecificationMissingKey" xml:space="preserve">
     <value>Unable to resolve specification reference for {0}. Key not found.</value>
   </data>
