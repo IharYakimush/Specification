@@ -121,7 +121,13 @@
         }
 
         private void WriteValue(SpecificationValue value)
-        {            
+        {
+            if (value.IsReference)
+            {
+                this.XmlWriter.WriteAttributeString(Consts.ValueRef, bool.TrueString.ToLowerInvariant());
+                return;
+            }
+
             if (value.ValueType != SpecificationValue.DataType.String)
             {
                 this.XmlWriter.WriteAttributeString(Consts.Type, value.ValueType.ToString("G").ToLowerInvariant());
@@ -142,11 +148,6 @@
             else
             {
                 this.XmlWriter.WriteAttributeString(Consts.Value, value.Serialize());
-            }
-
-            if (value.IsReference)
-            {
-                this.XmlWriter.WriteAttributeString(Consts.Ref, bool.TrueString.ToLowerInvariant());
             }
         }
     }

@@ -111,24 +111,25 @@
 
             if (Consts.CompareOperators.Contains(element.Name.LocalName))
             {
-                string key = GetKey(element, ns);
-                bool isRef = GetRef(element, ns);
-                SpecificationValue.Multiplicity mul = GetMul(element, ns);
-                SpecificationValue.DataType type = GetType(element, ns);
-                string[] values = GetValues(element, ns).ToArray();
                 SpecificationValue value;
+                string key = GetKey(element, ns);
+                string isRef = GetRef(element, ns);
 
-                if (isRef)
+                if (isRef != null)
                 {
                     element.Validate(
                         schema.SchemaTypes[new XmlQualifiedName("valueReference", ns)],
                         schemaSet,
                         (sender, args) => throw new ArgumentException(args.Message, args.Exception));
 
-                    value = SpecificationValue.Ref(values.Single());
-                }
+                    value = SpecificationValue.Ref(isRef);
+                }                
                 else
                 {
+                    SpecificationValue.Multiplicity mul = GetMul(element, ns);
+                    SpecificationValue.DataType type = GetType(element, ns);
+                    string[] values = GetValues(element, ns).ToArray();
+
                     if (values.Length <= 1)
                     {
                         element.Validate(
@@ -198,11 +199,11 @@
             return element.Attributes().Single(at => at.Name.LocalName == Consts.Key && (at.Name.Namespace == ns || at.Name.Namespace == string.Empty)).Value;
         }
 
-        private static bool GetRef(XElement element, string ns)
+        private static string GetRef(XElement element, string ns)
         {
-            string value = element.Attributes().SingleOrDefault(at => at.Name.LocalName == Consts.Ref && (at.Name.Namespace == ns || at.Name.Namespace == string.Empty))?.Value;
+            string value = element.Attributes().SingleOrDefault(at => at.Name.LocalName == Consts.ValueRef && (at.Name.Namespace == ns || at.Name.Namespace == string.Empty))?.Value;
 
-            return value != null && bool.Parse(value);
+            return value;
         }
 
         private static SpecificationValue.DataType GetType(XElement element, string ns)

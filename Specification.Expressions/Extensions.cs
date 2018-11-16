@@ -38,7 +38,7 @@
             if (typeof(T) == typeof(ReferenceSpecification))
             {
                 throw new Exception(
-                    $"This method can't be used with type {typeof(ReferenceSpecification)}. Use instance method {typeof(ReferenceSpecification).GetMethod(nameof(ReferenceSpecification.ResolveSpecificationRefs))} instead.");
+                    $"This method should not be used with type {typeof(ReferenceSpecification)}. Use instance method {typeof(ReferenceSpecification).GetMethod(nameof(ReferenceSpecification.ResolveSpecificationRefs))} instead.");
             }
 
             SpecificationReferenceVisitor visitor = new SpecificationReferenceVisitor(values, settings);

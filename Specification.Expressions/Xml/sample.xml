@@ -1,11 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<and xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Schema.xsd">
-  <or>
-    <eq key="qwe" ref="true"/>
-    <eq key="qwe" ref="true" value="12" m="anyof" t="float" />
-    <eq key="qwe" value="12" m="anyof" t="float" />
-  </or>
-  <hasvalue key="qwe"/>
-  <eq key="qwe" value="qwe" ref="true" />
-  <ref key="qwe"/>
-</and>
+<specCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Schema.xsd">
+  <values>
+    <add key="qwe123" value="1" />
+    <add key="qwe" value="1" />
+    <add key="true" value="true" />
+  </values>
+  
+  <definitions>
+    <add key="qwe">
+      <and >
+        <or>
+          <eq key="qwe4" valueRef="qwe123"/>
+          <eq key="qwe" valueRef="true" value="12" m="anyof" t="float" />
+          <eq key="qwe" value="12" m="anyof" t="float" />
+        </or>
+        <hasvalue key="qwe"/>
+        <eq key="qwe" value="qwe" valueRef="qwe" />
+        <ref key="qwe"/>
+        <!--<ref key="a"/>-->
+      </and>
+    </add>
+    <add key="qwe2">
+      <eq key="qwe" valueRef="true"/>
+    </add>
+    
+  </definitions>
+  <specifications>
+    <add key="a">
+        <ref key="qwe"/>
+    </add>
+    <!--<add key="b">
+      <ref key="a"/>
+    </add>-->
+  </specifications>
+</specCollection>
