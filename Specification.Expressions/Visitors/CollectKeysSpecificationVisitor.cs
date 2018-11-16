@@ -5,7 +5,7 @@
 
     using global::Specification.Expressions.Operators;
 
-    public class CollectKeysSpecificationVisitor : SpecificationVisitor
+    public class CollectKeysSpecificationVisitor : SpecificationReadOnlyVisitor
     {
         private readonly ICollection<string> keysCollection;
 
@@ -14,12 +14,14 @@
             this.keysCollection = keysCollection ?? throw new ArgumentNullException(nameof(keysCollection));
         }
 
-        public override void VisitWithoutModification(Specification value)
+        public override bool VisitAlways(Specification value)
         {
             if (value is KeySpecification ks)
             {
                 this.keysCollection.Add(ks.Key);
             }
+
+            return base.VisitAlways(value);
         }
     }
 }

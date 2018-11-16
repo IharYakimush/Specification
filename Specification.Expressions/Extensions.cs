@@ -6,6 +6,7 @@
     using System.Text;
     using System.Xml;
 
+    using global::Specification.Expressions.Operators;
     using global::Specification.Expressions.Visitors;
 
     public static class Extensions
@@ -34,6 +35,12 @@
             SpecificationEvaluationSettings settings = null)
             where T : Specification
         {
+            if (typeof(T) == typeof(ReferenceSpecification))
+            {
+                throw new Exception(
+                    $"This method can't be used with type {typeof(ReferenceSpecification)}. Use instance method {typeof(ReferenceSpecification).GetMethod(nameof(ReferenceSpecification.ResolveSpecificationRefs))} instead.");
+            }
+
             SpecificationReferenceVisitor visitor = new SpecificationReferenceVisitor(values, settings);
 
             return (T)visitor.Visit(specification);

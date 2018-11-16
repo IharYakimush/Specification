@@ -1,7 +1,21 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Authors>Ihar Yakimush</Authors>
+    <Company />
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageReleaseNotes>first release</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/IharYakimush/Specification</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/IharYakimush/Specification/blob/master/LICENSE</PackageLicenseUrl>
+    <Description>Specification pattern implementation for filtering objects. Main features supported:
+- Serialize and deserizlize specification which is usefull for configuring filters
+- Support references to avoid declaration of duplicate specifications
+- Visitors for efficien work with specification expressions tree</Description>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>.\..\sgn.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
