@@ -1,6 +1,8 @@
 ﻿namespace Specification.Expressions
 {
+    using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
 
     public class ReferenceResolutionSettings : SpecificationEvaluationSettings
     {
