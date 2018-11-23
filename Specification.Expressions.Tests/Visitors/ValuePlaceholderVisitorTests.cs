@@ -139,7 +139,7 @@
 
             ValueReferenceVisitor visitor = new ValueReferenceVisitor(
                 new Dictionary<string, object> { { "{p2}", "v1" } },
-                new SpecificationEvaluationSettings { ThrowValueErrors = false });
+                new ReferenceResolutionSettings { ThrowValueErrors = false });
 
             Specification result = visitor.Visit(equal);
 

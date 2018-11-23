@@ -41,7 +41,7 @@
 
         public Specification ResolveSpecificationRefs(
             IReadOnlyDictionary<string, object> values,
-            SpecificationEvaluationSettings settings = null)
+            ReferenceResolutionSettings settings = null)
         {
             SpecificationReferenceVisitor visitor = new SpecificationReferenceVisitor(values, settings);
 
@@ -79,7 +79,11 @@
                 {
                     if (value is ReferenceSpecification next)
                     {
-                        return TryResolveInternal(next, processed, values, out result, out error, includeDetails);
+                        bool tryNext = TryResolveInternal(next, processed, values, out var nextResult, out error, includeDetails);
+
+                        result = tryNext ? nextResult : next;
+
+                        return tryNext;
                     }
 
                     result = sp;

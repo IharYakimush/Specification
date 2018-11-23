@@ -171,7 +171,14 @@
 
                         string next = result.Values.Single().ToString();
 
-                        return TryFrom(next, values, settings, processed, out result, out error);
+                        bool tryNext = TryFrom(next, values, settings, processed, out var nextResult, out error);
+
+                        if (tryNext)
+                        {
+                            result = nextResult;
+                        }                        
+
+                        return tryNext;
                     }
 
                     return true;

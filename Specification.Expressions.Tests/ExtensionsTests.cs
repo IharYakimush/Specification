@@ -68,7 +68,7 @@
 
             AndSpecification result = and.ResolveSpecificationRefs(
                 values,
-                new SpecificationEvaluationSettings { ThrowReferenceErrors = false });
+                new ReferenceResolutionSettings { ThrowReferenceErrors = false });
 
             Assert.Same(referenceSpecification, result.Specifications.Last());
         }
@@ -95,6 +95,28 @@
         }
 
         [Fact]
+        public void ResolveSpecPartial()
+        {
+            ReferenceSpecification referenceSpecification = new ReferenceSpecification("qwe");
+
+           ReferenceSpecification refSpec = new ReferenceSpecification("qwe2");
+            Dictionary<string, object> values =
+                new Dictionary<string, object>
+                    {
+                        {
+                            "qwe",
+                            refSpec
+                        }
+                    };
+
+            ReferenceResolutionSettings settings = new ReferenceResolutionSettings();
+            settings.AllowedUnresolvedSpecificationReferenceKeys.Add("qwe2");
+            Specification resolved = referenceSpecification.ResolveSpecificationRefs(values, settings);
+
+            Assert.Same(refSpec, resolved);
+        }
+
+        [Fact]
         public void ResolveValueRefs()
         {
             AndSpecification and = new AndSpecification(
@@ -110,6 +132,28 @@
         }
 
         [Fact]
+        public void ResolveValueRefPartial()
+        {
+            AndSpecification and = new AndSpecification(
+                new EqualSpecification("qwe", SpecificationValue.Single(1)),
+                new LessOrEqualSpecification("qwe", SpecificationValue.Ref("qwe")));
+
+            Dictionary<string, object> values = new Dictionary<string, object>
+                                                    {
+                                                        { "qwe", SpecificationValue.Ref("qwe2") },
+                                                    };
+            ReferenceResolutionSettings settings = new ReferenceResolutionSettings();
+            settings.AllowedUnresolvedValueReferenceKeys.Add("qwe2");
+
+            AndSpecification resolved = and.ResolveValueRefs(
+                values,
+                settings);
+            var kv = Assert.IsType<LessOrEqualSpecification>(resolved.Specifications.Last());
+            Assert.True(kv.Value.IsReference);
+            Assert.Equal("qwe2", kv.Value.Values.Single());
+        }
+
+        [Fact]
         public void ResolveValueRefsError()
         {
             SpecificationValue refValue = SpecificationValue.Ref("qwe");
@@ -120,7 +164,7 @@
             Dictionary<string, object> values = new Dictionary<string, object> { { "qwe", TimeSpan.FromDays(1) } };
             AndSpecification resolved = and.ResolveValueRefs(
                 values,
-                new SpecificationEvaluationSettings { ThrowValueErrors = false });
+                new ReferenceResolutionSettings { ThrowValueErrors = false });
             var kv = Assert.IsType<LessOrEqualSpecification>(resolved.Specifications.Last());
             Assert.True(kv.Value.IsReference);
             Assert.Same(refValue, kv.Value);

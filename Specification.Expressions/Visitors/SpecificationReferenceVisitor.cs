@@ -9,18 +9,23 @@
     {
         public IReadOnlyDictionary<string, object> Values { get; }
 
-        public SpecificationEvaluationSettings Settings { get; }
+        public ReferenceResolutionSettings Settings { get; }
 
-        public SpecificationReferenceVisitor(IReadOnlyDictionary<string, object> values, SpecificationEvaluationSettings settings = null)
+        public SpecificationReferenceVisitor(IReadOnlyDictionary<string, object> values, ReferenceResolutionSettings settings = null)
         {
             this.Values = values ?? throw new ArgumentNullException(nameof(values));
-            this.Settings = settings ?? SpecificationEvaluationSettings.Default;
+            this.Settings = settings ?? ReferenceResolutionSettings.Default;
         }
         public override Specification VisitReference(ReferenceSpecification rf)
         {
             var r = rf.TryResolve(out var result, this.Values, out string error, true);
 
             if (r)
+            {
+                return result;
+            }
+
+            if (result != null && result is ReferenceSpecification refSpec && this.Settings.AllowedUnresolvedSpecificationReferenceKeys.Contains(refSpec.Key))
             {
                 return result;
             }

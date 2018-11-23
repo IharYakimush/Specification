@@ -11,12 +11,12 @@
     {
         public IReadOnlyDictionary<string, object> Values { get; }
 
-        public SpecificationEvaluationSettings Settings { get; }
+        public ReferenceResolutionSettings Settings { get; }
 
-        public ValueReferenceVisitor(IReadOnlyDictionary<string, object> values, SpecificationEvaluationSettings settings = null)
+        public ValueReferenceVisitor(IReadOnlyDictionary<string, object> values, ReferenceResolutionSettings settings = null)
         {
             this.Values = values ?? throw new ArgumentNullException(nameof(values));
-            this.Settings = settings ?? SpecificationEvaluationSettings.Default;
+            this.Settings = settings ?? ReferenceResolutionSettings.Default;
         }
 
         public override Specification VisitEqual(EqualSpecification eq)
@@ -73,7 +73,13 @@
         {
             if (specValue.IsReference)
             {
-                if (SpecificationValue.TryFrom(specValue.Values.Single().ToString(), this.Values, this.Settings.ValueSettings, out SpecificationValue sv,out string error))
+                string key = specValue.Values.Single().ToString();
+                if (SpecificationValue.TryFrom(key, this.Values, this.Settings.ValueSettings, out SpecificationValue sv, out string error))
+                {
+                    return factory(sv);
+                }
+
+                if (sv != null && this.Settings.AllowedUnresolvedValueReferenceKeys.Contains(sv.Values.Single().ToString()))
                 {
                     return factory(sv);
                 }

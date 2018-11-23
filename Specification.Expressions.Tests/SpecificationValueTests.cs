@@ -294,7 +294,8 @@
             }
             else
             {
-                Assert.Null(specification);
+                // Assert.Null(specification);
+                // spec value is last node in refs chain which was resolved successfully
             }
 
             if (expectedError != null)

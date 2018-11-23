@@ -21,7 +21,7 @@
         public static T ResolveValueRefs<T>(
             this T specification,
             IReadOnlyDictionary<string, object> values,
-            SpecificationEvaluationSettings settings = null)
+            ReferenceResolutionSettings settings = null)
             where T : Specification
         {
             ValueReferenceVisitor visitor = new ValueReferenceVisitor(values, settings);
@@ -32,7 +32,7 @@
         public static T ResolveSpecificationRefs<T>(
             this T specification,
             IReadOnlyDictionary<string, object> values,
-            SpecificationEvaluationSettings settings = null)
+            ReferenceResolutionSettings settings = null)
             where T : Specification
         {
             if (typeof(T) == typeof(ReferenceSpecification))
