@@ -169,7 +169,7 @@
     <value>Unable to resolve right value in {0}. {1}</value>
   </data>
   <data name="CompareSpecificationNotMatch" xml:space="preserve">
-    <value>{0} value(s) not satisfied {1}</value>
+    <value>Right value(s) {0} not satisfied left value(s) {1} in {2}</value>
   </data>
   <data name="CompareSpecificationToString" xml:space="preserve">
     <value>{0} {1} {2}</value>
@@ -270,4 +270,7 @@
   <data name="XmlParseUnknownElement" xml:space="preserve">
     <value>Unknown element {0}.</value>
   </data>
+  <data name="SpecificationsCollectionResolveError" xml:space="preserve">
+    <value>Unable to resolve specification with key {0}. {1}.</value>
+  </data>  
 </root>

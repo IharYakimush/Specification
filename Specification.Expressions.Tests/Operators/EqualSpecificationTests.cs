@@ -36,7 +36,7 @@
             SpecificationResult spr = specification.Evaluate(new Dictionary<string, object> { { "key", 2 } });
 
             Assert.False(spr.IsSatisfied);
-            Assert.Equal("2 value(s) not satisfied key equal 1", spr.Details);
+            Assert.Equal("Right value(s) 1 not satisfied left value(s) 2 in key equal 1", spr.Details);
         }
 
         [Theory]

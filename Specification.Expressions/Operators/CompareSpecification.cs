@@ -24,7 +24,7 @@
             return SpecificationResult.Create(
                 result,
                 result ? null :
-                settings.IncludeDetails ? string.Format(SpecAbsRes.CompareSpecificationNotMatch, left, this) : null);
+                settings.IncludeDetails ? string.Format(SpecAbsRes.CompareSpecificationNotMatch, right, left, this) : null);
         }
 
         private bool ApplyMultiplicity(IEnumerable<object> objects, Func<object, bool> func, SpecificationValue value)

@@ -3,14 +3,10 @@
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Collections.Specialized;
-
-    using global::Specification.Expressions.Impl;
+    using System.Linq;
 
     public class SpecificationsCollection
     {
-        private static readonly object SyncObj = new object();
         private ReferenceResolutionSettings Settings { get; } = new ReferenceResolutionSettings();
 
         public ICollection<string> AllowedRuntimeValueReferenceKeys => this.Settings.AllowedUnresolvedValueReferenceKeys;
@@ -23,31 +19,39 @@
 
         public IDictionary<string, Specification> Specifications { get; } = new Dictionary<string, Specification>();
 
-        public IDictionary<string, Specification> ResolveAll(ReferenceResolutionSettings settings)
+        public IDictionary<string, Specification> ResolveAll()
         {
+            Dictionary<string, Specification> result = new Dictionary<string, Specification>(this.Specifications.Count);
+            Dictionary<string, object> values = this.ValuesForReference.ToDictionary(p => p.Key, p => (object)p.Value);
+            Dictionary<string, object> refs = this.SpecificationsForReference.ToDictionary(p => p.Key, p => (object)p.Value);
+
             foreach (KeyValuePair<string, Specification> pair in this.Specifications)
             {
-                
+                try
+                {
+                    Specification specification = pair.Value;
+
+                    if (specification.HasSpecificationRefs())
+                    {
+                        specification = specification.ResolveSpecificationRefs(
+                            refs,
+                            this.Settings);
+                    }
+
+                    if (specification.HasValueRefs())
+                    {
+                        specification = specification.ResolveValueRefs(values, this.Settings);
+                    }
+
+                    result.Add(pair.Key, specification);
+                }
+                catch (Exception e)
+                {
+                    throw new InvalidOperationException(string.Format(SpecAbsRes.SpecificationsCollectionResolveError, pair.Key, e.Message), e);
+                }
             }
-        }
 
-        private Specification Resolve(string key)
-        {
-            Specification specification = this.Specifications[key];
-
-            if (specification.HasSpecificationRefs())
-            {
-                specification = specification.ResolveSpecificationRefs(
-                    this.specificationsForReference.Inner,
-                    this.Settings);
-            }
-
-            if (specification.HasValueRefs())
-            {
-                specification = specification.ResolveValueRefs(this.valuesForReference.Inner, this.Settings);
-            }
-
-            return specification;
+            return result;
         }        
     }
 }

@@ -79,7 +79,7 @@ namespace Specification.Expressions {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} value(s) not satisfied {1}.
+        ///   Looks up a localized string similar to Right value(s) {0} not satisfied left value(s) {1} in {2}.
         /// </summary>
         internal static string CompareSpecificationNotMatch {
             get {
@@ -354,6 +354,15 @@ namespace Specification.Expressions {
         internal static string ReferenceSpecificationNull {
             get {
                 return ResourceManager.GetString("ReferenceSpecificationNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to resolve specification with key {0}. {1}..
+        /// </summary>
+        internal static string SpecificationsCollectionResolveError {
+            get {
+                return ResourceManager.GetString("SpecificationsCollectionResolveError", resourceCulture);
             }
         }
         

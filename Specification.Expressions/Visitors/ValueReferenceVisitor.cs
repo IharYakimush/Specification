@@ -84,6 +84,11 @@
                     return factory(sv);
                 }
 
+                if (this.Settings.AllowedUnresolvedValueReferenceKeys.Contains(specValue.Values.Single().ToString()))
+                {
+                    return baseFactory();
+                }
+
                 if (this.Settings.ThrowValueErrors)
                 {
                     throw new InvalidOperationException(

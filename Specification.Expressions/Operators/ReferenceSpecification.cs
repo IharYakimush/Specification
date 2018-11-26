@@ -100,6 +100,7 @@
                 return false;
             }
 
+            result = reference;
             error = includeDetails ? string.Format(SpecAbsRes.ReferenceSpecificationMissingKey, reference.Key) : null;
             return false;
         }
