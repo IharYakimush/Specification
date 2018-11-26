@@ -4,6 +4,7 @@
     <add key="qwe123" value="1" />
     <add key="qwe" value="1" />
     <add key="true" value="true" />
+    <add key="refrv" valueRef="rk" />
     <runtime key="rk"/>
   </values>
   

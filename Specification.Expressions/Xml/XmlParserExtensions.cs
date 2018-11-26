@@ -26,21 +26,15 @@
         {
             ns = ns ?? string.Empty;
 
-            XmlSchemaSet schemaSet = Schemas.GetOrAdd(
-                ns,
-                nss =>
-                    {
-                        XmlSchemaSet result = new XmlSchemaSet();
-                        Assembly assembly = typeof(XmlParserExtensions).Assembly;
-                        string manifest = assembly.GetManifestResourceNames().SingleOrDefault(s => s.Contains(".xsd"));
+            XmlSchemaSet schemaSet = GetShemaSet(ns);
 
-                        Stream stream = assembly.GetManifestResourceStream(manifest);
+            XmlSchema schema = ValidateXsd(element, ns, schemaSet);
 
-                        result.Add(ns, new XmlTextReader(stream));
-                        result.Compile();
-                        return result;
-                    });
+            return FromXmlValidated(element, schema, schemaSet, ns);
+        }
 
+        private static XmlSchema ValidateXsd(XElement element, string ns, XmlSchemaSet schemaSet)
+        {
             XmlSchema schema = schemaSet.Schemas(ns).OfType<XmlSchema>().First();
 
             string name = element.Name.LocalName;
@@ -58,14 +52,37 @@
                 throw new ArgumentException(string.Format(SpecAbsRes.XmlParseUnknownElement, qualifiedName));
             }
 
-            return FromXmlValidated(element, schema, schemaSet, ns);
+            return schema;
         }
 
-        private static Specification FromXmlValidated(XElement element, XmlSchema schema, XmlSchemaSet schemaSet, string ns)
-        {            
+        private static XmlSchemaSet GetShemaSet(string ns)
+        {
+            return Schemas.GetOrAdd(
+                ns,
+                nss =>
+                    {
+                        XmlSchemaSet result = new XmlSchemaSet();
+                        Assembly assembly = typeof(XmlParserExtensions).Assembly;
+                        string manifest = assembly.GetManifestResourceNames().SingleOrDefault(s => s.Contains(".xsd"));
+
+                        Stream stream = assembly.GetManifestResourceStream(manifest);
+
+                        result.Add(ns, new XmlTextReader(stream));
+                        result.Compile();
+                        return result;
+                    });
+        }
+
+        private static Specification FromXmlValidated(
+            XElement element,
+            XmlSchema schema,
+            XmlSchemaSet schemaSet,
+            string ns)
+        {
             if (element.Name.LocalName == Consts.And || element.Name.LocalName == Consts.Or)
             {
-                List<Specification> inner = new List<Specification>(element.Elements().Count(el => el.Name.Namespace == ns));
+                List<Specification> inner =
+                    new List<Specification>(element.Elements().Count(el => el.Name.Namespace == ns));
 
                 foreach (XElement item in element.Elements().Where(el => el.Name.Namespace == ns))
                 {
@@ -111,60 +128,9 @@
 
             if (Consts.CompareOperators.Contains(element.Name.LocalName))
             {
-                SpecificationValue value;
                 string key = GetKey(element, ns);
-                string isRef = GetRef(element, ns);
+                SpecificationValue value = ParseSpecificationValue(element, schema, schemaSet, ns);
 
-                if (isRef != null)
-                {
-                    element.Validate(
-                        schema.SchemaTypes[new XmlQualifiedName("valueReference", ns)],
-                        schemaSet,
-                        (sender, args) => throw new ArgumentException(args.Message, args.Exception));
-
-                    value = SpecificationValue.Ref(isRef);
-                }                
-                else
-                {
-                    SpecificationValue.Multiplicity mul = GetMul(element, ns);
-                    SpecificationValue.DataType type = GetType(element, ns);
-                    string[] values = GetValues(element, ns).ToArray();
-
-                    if (values.Length <= 1)
-                    {
-                        element.Validate(
-                            schema.SchemaTypes[new XmlQualifiedName("valueSingle", ns)],
-                            schemaSet,
-                            (sender, args) => throw new ArgumentException(args.Message, args.Exception));
-                    }
-                    else
-                    {
-                        element.Validate(
-                            schema.SchemaTypes[new XmlQualifiedName("valueMultiple", ns)],
-                            schemaSet,
-                            (sender, args) => throw new ArgumentException(args.Message, args.Exception));
-                    }
-
-                    SpecificationValueSettings settings = ValueSettings.GetOrAdd(
-                        (int)mul * 1000 + (int)type,
-                        i => new SpecificationValueSettings
-                                 {
-                                     AllowCast = true,
-                                     DefaultMultiplicity = mul,
-                                     IncludeDetails = true,
-                                     ExpectedType = type
-                                 });
-
-                    if (!SpecificationValue.TryFrom(
-                            values,
-                            settings,
-                            out value,
-                            out string error))
-                    {
-                        throw new ArgumentException(error);
-                    }
-                }
-                
                 if (element.Name.LocalName == Consts.Eq)
                 {
                     return new EqualSpecification(key, value);
@@ -194,21 +160,86 @@
             throw new NotImplementedException();
         }
 
+        private static SpecificationValue ParseSpecificationValue(
+            XElement element,
+            XmlSchema schema,
+            XmlSchemaSet schemaSet,
+            string ns)
+        {
+            SpecificationValue value;
+            string isRef = GetRef(element, ns);
+
+            if (isRef != null)
+            {
+                element.Validate(
+                    schema.SchemaTypes[new XmlQualifiedName("valueReference", ns)],
+                    schemaSet,
+                    (sender, args) => throw new ArgumentException(args.Message, args.Exception));
+
+                value = SpecificationValue.Ref(isRef);
+            }
+            else
+            {
+                SpecificationValue.Multiplicity mul = GetMul(element, ns);
+                SpecificationValue.DataType type = GetType(element, ns);
+                string[] values = GetValues(element, ns).ToArray();
+
+                if (values.Length <= 1)
+                {
+                    element.Validate(
+                        schema.SchemaTypes[new XmlQualifiedName("valueSingle", ns)],
+                        schemaSet,
+                        (sender, args) => throw new ArgumentException(args.Message, args.Exception));
+                }
+                else
+                {
+                    element.Validate(
+                        schema.SchemaTypes[new XmlQualifiedName("valueMultiple", ns)],
+                        schemaSet,
+                        (sender, args) => throw new ArgumentException(args.Message, args.Exception));
+                }
+
+                SpecificationValueSettings settings = ValueSettings.GetOrAdd(
+                    (int)mul * 1000 + (int)type,
+                    i => new SpecificationValueSettings
+                             {
+                                 AllowCast = true,
+                                 DefaultMultiplicity = mul,
+                                 IncludeDetails = true,
+                                 ExpectedType = type
+                             });
+
+                if (!SpecificationValue.TryFrom(values, settings, out value, out string error))
+                {
+                    throw new ArgumentException(error);
+                }
+            }
+
+            return value;
+        }
+
         private static string GetKey(XElement element, string ns)
         {
-            return element.Attributes().Single(at => at.Name.LocalName == Consts.Key && (at.Name.Namespace == ns || at.Name.Namespace == string.Empty)).Value;
+            return element.Attributes().Single(
+                    at => at.Name.LocalName == Consts.Key
+                          && (at.Name.Namespace == ns || at.Name.Namespace == string.Empty))
+                .Value;
         }
 
         private static string GetRef(XElement element, string ns)
         {
-            string value = element.Attributes().SingleOrDefault(at => at.Name.LocalName == Consts.ValueRef && (at.Name.Namespace == ns || at.Name.Namespace == string.Empty))?.Value;
+            string value = element.Attributes().SingleOrDefault(
+                at => at.Name.LocalName == Consts.ValueRef
+                      && (at.Name.Namespace == ns || at.Name.Namespace == string.Empty))?.Value;
 
             return value;
         }
 
         private static SpecificationValue.DataType GetType(XElement element, string ns)
         {
-            string value = element.Attributes().SingleOrDefault(at => at.Name.LocalName == Consts.Type && (at.Name.Namespace == ns || at.Name.Namespace == string.Empty))?.Value;
+            string value = element.Attributes().SingleOrDefault(
+                at => at.Name.LocalName == Consts.Type
+                      && (at.Name.Namespace == ns || at.Name.Namespace == string.Empty))?.Value;
 
             return value == null
                        ? SpecificationValue.DataType.String
@@ -217,7 +248,10 @@
 
         private static SpecificationValue.Multiplicity GetMul(XElement element, string ns)
         {
-            string value = element.Attributes().SingleOrDefault(at => at.Name.LocalName == Consts.Mul && (at.Name.Namespace == ns || at.Name.Namespace == string.Empty))?.Value;
+            string value = element.Attributes().SingleOrDefault(
+                    at => at.Name.LocalName == Consts.Mul
+                          && (at.Name.Namespace == ns || at.Name.Namespace == string.Empty))
+                ?.Value;
 
             return value == null
                        ? SpecificationValue.Multiplicity.AnyOf
@@ -229,8 +263,9 @@
 
         private static IEnumerable<string> GetValues(XElement element, string ns)
         {
-            XAttribute value = element.Attributes()
-                .SingleOrDefault(at => at.Name.LocalName == Consts.Value && (at.Name.Namespace == ns || at.Name.Namespace == string.Empty));
+            XAttribute value = element.Attributes().SingleOrDefault(
+                at => at.Name.LocalName == Consts.Value
+                      && (at.Name.Namespace == ns || at.Name.Namespace == string.Empty));
 
             if (value != null)
             {
@@ -242,6 +277,78 @@
                 {
                     yield return item.Value;
                 }
+            }
+        }
+
+        public static void LoadFromXml(this SpecificationsCollection collection, XElement element, string ns = null)
+        {
+            ns = ns ?? string.Empty;
+
+            XmlSchemaSet schemaSet = GetShemaSet(ns);
+
+            XmlSchema schema = ValidateXsd(element, ns, schemaSet);
+
+            CollectionFromValidated(collection, element, schema, schemaSet, ns);
+        }
+
+        private static void CollectionFromValidated(
+            SpecificationsCollection collection,
+            XElement element,
+            XmlSchema schema,
+            XmlSchemaSet schemaSet,
+            string ns)
+        {
+            var values = element.Element(XName.Get(Consts.RefValuesCollection, ns));
+            if (values != null)
+            {
+                foreach (XElement add in values.Elements(XName.Get(Consts.Add, ns)))
+                {
+                    string key = GetKey(add, ns);
+                    SpecificationValue value = ParseSpecificationValue(add, schema, schemaSet, ns);
+                    collection.ValuesForReference.Add(key, value);
+                }
+
+                foreach (XElement runtime in values.Elements(XName.Get(Consts.Runtime, ns)))
+                {
+                    string key = GetKey(runtime, ns);
+                    collection.AllowedRuntimeValueReferenceKeys.Add(key);
+                }
+            }
+
+            var definitions = element.Element(XName.Get(Consts.RefSpecCollection, ns));
+            if (definitions != null)
+            {
+                foreach (XElement add in definitions.Elements(XName.Get(Consts.Add, ns)))
+                {
+                    string key = GetKey(add, ns);
+                    Specification spec = FromXmlValidated(
+                        add.Elements().First(e => e.Name.Namespace == ns),
+                        schema,
+                        schemaSet,
+                        ns);
+                    collection.SpecificationsForReference.Add(key, spec);
+                }
+
+                foreach (XElement runtime in definitions.Elements(XName.Get(Consts.Runtime, ns)))
+                {
+                    string key = GetKey(runtime, ns);
+                    collection.AllowedRuntimeSpecificationReferenceKeys.Add(key);
+                }
+            }
+
+            var specifications = element.Element(XName.Get(Consts.SpecCollection, ns));
+            if (specifications != null)
+            {
+                foreach (XElement add in specifications.Elements(XName.Get(Consts.Add, ns)))
+                {
+                    string key = GetKey(add, ns);
+                    Specification spec = FromXmlValidated(
+                        add.Elements().First(e => e.Name.Namespace == ns),
+                        schema,
+                        schemaSet,
+                        ns);
+                    collection.Specifications.Add(key, spec);
+                }               
             }
         }
     }

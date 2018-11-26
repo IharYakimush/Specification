@@ -149,7 +149,10 @@
               </xs:choice>
             </xs:sequence>
           </xs:complexType>
-
+          <xs:keyref name="value_key_ref_values" refer="value_key">
+            <xs:selector xpath=".//*" />
+            <xs:field xpath="@valueRef" />
+          </xs:keyref>
         </xs:element>
 
         <xs:element name="definitions" minOccurs="0" maxOccurs="1">

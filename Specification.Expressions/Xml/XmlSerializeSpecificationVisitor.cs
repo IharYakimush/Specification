@@ -1,6 +1,7 @@
 ﻿namespace Specification.Expressions.Xml
 {
     using System;
+    using System.Linq;
     using System.Xml;
 
     using global::Specification.Expressions.Operators;
@@ -120,35 +121,43 @@
             this.XmlWriter.WriteAttributeString(Consts.Key, key);
         }
 
-        private void WriteValue(SpecificationValue value)
+        public static void WriteValue(XmlWriter writer, SpecificationValue value)
         {
+            if (writer == null) throw new ArgumentNullException(nameof(writer));
+            if (value == null) throw new ArgumentNullException(nameof(value));
+
             if (value.IsReference)
             {
-                this.XmlWriter.WriteAttributeString(Consts.ValueRef, bool.TrueString.ToLowerInvariant());
+                writer.WriteAttributeString(Consts.ValueRef, value.Values.Single().ToString());
                 return;
             }
 
             if (value.ValueType != SpecificationValue.DataType.String)
             {
-                this.XmlWriter.WriteAttributeString(Consts.Type, value.ValueType.ToString("G").ToLowerInvariant());
+                writer.WriteAttributeString(Consts.Type, value.ValueType.ToString("G").ToLowerInvariant());
             }
 
             if (value.ValueMultiplicity != SpecificationValue.Multiplicity.AnyOf && value.Values.Count > 1)
             {
-                this.XmlWriter.WriteAttributeString(Consts.Mul, value.ValueMultiplicity.ToString("G").ToLowerInvariant());
+                writer.WriteAttributeString(Consts.Mul, value.ValueMultiplicity.ToString("G").ToLowerInvariant());
             }
 
             if (value.Values.Count > 1)
             {
                 for (int i = 0; i < value.Values.Count; i++)
                 {
-                    this.XmlWriter.WriteElementString(Consts.Value, value.Serialize(i));
-                }                
+                    writer.WriteElementString(Consts.Value, value.Serialize(i));
+                }
             }
             else
             {
-                this.XmlWriter.WriteAttributeString(Consts.Value, value.Serialize());
+                writer.WriteAttributeString(Consts.Value, value.Serialize());
             }
+        }
+
+        private void WriteValue(SpecificationValue value)
+        {
+            WriteValue(this.XmlWriter, value);
         }
     }
 }
