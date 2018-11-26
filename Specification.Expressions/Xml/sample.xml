@@ -4,9 +4,11 @@
     <add key="qwe123" value="1" />
     <add key="qwe" value="1" />
     <add key="true" value="true" />
+    <runtime key="rk"/>
   </values>
   
   <definitions>
+    <runtime key="rs"/>
     <add key="qwe">
       <and >
         <or>
@@ -23,14 +25,16 @@
     <add key="qwe2">
       <eq key="qwe" valueRef="true"/>
     </add>
-    
+    <add key="qwe3">
+      <eq key="qwe" valueRef="rk"/>
+    </add>
   </definitions>
   <specifications>
     <add key="a">
         <ref key="qwe"/>
     </add>
-    <!--<add key="b">
-      <ref key="a"/>
-    </add>-->
+    <add key="b">
+      <ref key="rs"/>
+    </add>
   </specifications>
 </specCollection>

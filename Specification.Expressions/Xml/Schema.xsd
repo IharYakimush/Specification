@@ -143,33 +143,38 @@
         <xs:element name="values" minOccurs="0" maxOccurs="1">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="add" minOccurs="0" maxOccurs="unbounded" type="keyValueSpec">
-
-              </xs:element>
+              <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="add" minOccurs="0" maxOccurs="unbounded" type="keyValueSpec"/>
+                <xs:element name="runtime" minOccurs="0" maxOccurs="unbounded" type="keyValueSpec"/>
+              </xs:choice>
             </xs:sequence>
           </xs:complexType>
 
         </xs:element>
 
         <xs:element name="definitions" minOccurs="0" maxOccurs="1">
-          <xs:complexType>
+          <xs:complexType>           
             <xs:sequence>
-              <xs:element name="add" minOccurs="0" maxOccurs="unbounded">
-                <xs:complexType>
-                  <xs:sequence>
-                    <xs:group ref="specifications"></xs:group>
-                  </xs:sequence>
-                  <xs:attribute name="key" type="xs:string" use="required"></xs:attribute>
-                </xs:complexType>
-                <xs:keyref name="value_key_ref_definitions" refer="value_key">
-                  <xs:selector xpath=".//*" />
-                  <xs:field xpath="@valueRef" />
-                </xs:keyref>
-                <xs:keyref name="definition_key_ref_definitions" refer="definition_key">
-                  <xs:selector xpath=".//ref" />
-                  <xs:field xpath="@key" />
-                </xs:keyref>
-              </xs:element>
+              <xs:choice  minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="runtime" minOccurs="0" maxOccurs="unbounded" type="keyValueSpec"/>
+
+                <xs:element name="add" minOccurs="0" maxOccurs="unbounded">
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:group ref="specifications"></xs:group>
+                    </xs:sequence>
+                    <xs:attribute name="key" type="xs:string" use="required"></xs:attribute>
+                  </xs:complexType>
+                  <xs:keyref name="value_key_ref_definitions" refer="value_key">
+                    <xs:selector xpath=".//*" />
+                    <xs:field xpath="@valueRef" />
+                  </xs:keyref>
+                  <xs:keyref name="definition_key_ref_definitions" refer="definition_key">
+                    <xs:selector xpath=".//ref" />
+                    <xs:field xpath="@key" />
+                  </xs:keyref>
+                </xs:element>
+              </xs:choice>              
             </xs:sequence>
           </xs:complexType>          
         </xs:element>
@@ -200,11 +205,11 @@
       </xs:sequence>
     </xs:complexType>
     <xs:key id="vid" name="value_key">
-      <xs:selector xpath="values/add" />
+      <xs:selector xpath="values/*" />
       <xs:field xpath="@key" />
     </xs:key>
     <xs:key id="did" name="definition_key">
-      <xs:selector xpath="definitions/add" />
+      <xs:selector xpath="definitions/*" />
       <xs:field xpath="@key" />
     </xs:key>
     <xs:key id="sid" name="specification_key">
