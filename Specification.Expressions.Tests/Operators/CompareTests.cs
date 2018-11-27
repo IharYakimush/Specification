@@ -112,13 +112,13 @@
         [Fact]
         public void LessOrEqualDateTime()
         {
-            //Assert.True(new LessOrEqualSpecification("k4", SpecificationValue.Single(new DateTime(2018, 10, 10, 1, 2, 3, DateTimeKind.Utc))).Evaluate(this.values).IsSatisfied);
-            //Assert.True(new LessOrEqualSpecification("k4", SpecificationValue.Single(new DateTime(2018, 10, 10, 1, 2, 4, DateTimeKind.Utc))).Evaluate(this.values).IsSatisfied);
-            //Assert.False(new LessOrEqualSpecification("k4", SpecificationValue.Single(new DateTime(2018, 10, 10, 1, 2, 2, DateTimeKind.Utc))).Evaluate(this.values).IsSatisfied);
+            Assert.True(new LessOrEqualSpecification("k4", SpecificationValue.Single(new DateTime(2018, 10, 10, 1, 2, 3, DateTimeKind.Utc))).Evaluate(this.values).IsSatisfied);
+            Assert.True(new LessOrEqualSpecification("k4", SpecificationValue.Single(new DateTime(2018, 10, 10, 1, 2, 4, DateTimeKind.Utc))).Evaluate(this.values).IsSatisfied);
+            Assert.False(new LessOrEqualSpecification("k4", SpecificationValue.Single(new DateTime(2018, 10, 10, 1, 2, 2, DateTimeKind.Utc))).Evaluate(this.values).IsSatisfied);
 
             Assert.True(new LessOrEqualSpecification("k4", SpecificationValue.Single(new DateTime(2018, 10, 10, 1, 2, 3, DateTimeKind.Utc).ToLocalTime())).Evaluate(this.values).IsSatisfied);
-            //Assert.True(new LessOrEqualSpecification("k4", SpecificationValue.Single(new DateTime(2018, 10, 10, 1, 2, 4, DateTimeKind.Utc).ToLocalTime())).Evaluate(this.values).IsSatisfied);
-            //Assert.False(new LessOrEqualSpecification("k4", SpecificationValue.Single(new DateTime(2018, 10, 10, 1, 2, 2, DateTimeKind.Utc).ToLocalTime())).Evaluate(this.values).IsSatisfied);
+            Assert.True(new LessOrEqualSpecification("k4", SpecificationValue.Single(new DateTime(2018, 10, 10, 1, 2, 4, DateTimeKind.Utc).ToLocalTime())).Evaluate(this.values).IsSatisfied);
+            Assert.False(new LessOrEqualSpecification("k4", SpecificationValue.Single(new DateTime(2018, 10, 10, 1, 2, 2, DateTimeKind.Utc).ToLocalTime())).Evaluate(this.values).IsSatisfied);
         }
     }
 }

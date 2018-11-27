@@ -25,7 +25,7 @@
               <xs:enumeration value="int"/>
               <xs:enumeration value="float"/>
               <xs:enumeration value="string"/>
-              <xs:enumeration value="dateTime"/>
+              <xs:enumeration value="datetime"/>
             </xs:restriction>
           </xs:simpleType>
         </xs:attribute>

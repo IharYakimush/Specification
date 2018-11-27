@@ -136,7 +136,7 @@
                 case SpecificationValue.DataType.Float:
                     return value.Values.OfType<float>().ElementAt(index).ToString("F");
                 case SpecificationValue.DataType.DateTime:
-                    return value.Values.OfType<DateTime>().ElementAt(index).ToString("u");
+                    return value.Values.OfType<DateTime>().ElementAt(index).ToUniversalTime().ToString("u");
                 case SpecificationValue.DataType.String:
                     return value.Values.ElementAt(index).ToString();
                 default: throw new InvalidOperationException();

@@ -11,6 +11,7 @@ Specification specification = new AndSpecification(
     new EqualSpecification("key1", SpecificationValue.Single("value1")),
     new OrSpecification(
         new HasValueSpecification("key2"),
+		new EqualSpecification("key5", SpecificationValue.Single(new DateTime(2018, 10, 10, 1, 2, 3))),
 
         // value of key3 should be equal to any of values 1,2,3
         new EqualSpecification("key3", SpecificationValue.AnyOf(1, 2, 3))),
@@ -33,12 +34,13 @@ Dictionary<string, object> values = new Dictionary<string, object>
 SpecificationResult result = specification.Evaluate(values);
 Assert.True(result.IsSatisfied);
 ```
-Serialize specification expression to xml `string xml = specification.ToXml();`
+Serialize specification expression to xml `string xml = specification.ToXml();`. DateTime values will be converted to UTC for serialization and comparison.
 ```
 <and>
   <eq key="key1" value="value1" />
   <or>
     <hasvalue key="key2" />
+	<eq key="key5" t="datetime" value="2018-10-09 22:02:03Z" />
     <eq key="key3" t="int">
       <value>1</value>
       <value>2</value>
@@ -48,7 +50,7 @@ Serialize specification expression to xml `string xml = specification.ToXml();`
   <ge key="key4" valueRef="currentDateTime" />
 </and>
 ```
-Parse specification from xml `Specification sp2 = Specification.Parse.FromXml(XElement.Parse(xml));`
+Parse specification from xml `Specification sp2 = Specification.Parse.FromXml(XElement.Parse(xml));`. Parse operation assume DateTime to be UTC values.
 
 ## NuGet
 https://www.nuget.org/packages/Specification.Expressions

@@ -13,10 +13,11 @@
         [Fact]
         public void DoSomthing()
         {
-            Specification specification = new AndSpecification(
-                new EqualSpecification("key1", SpecificationValue.Single("value1")),
-                new OrSpecification(
-                    new HasValueSpecification("key2"),
+            Specification specification =
+                new AndSpecification(new EqualSpecification("key1", SpecificationValue.Single("value1")), new
+                    OrSpecification(
+                        new HasValueSpecification("key2"), 
+                        new EqualSpecification("key5", SpecificationValue.Single(new DateTime(2018, 10, 10, 1, 2, 3, DateTimeKind.Local))),
 
                     // value of key3 should be equal to any of values 1,2,3
                     new EqualSpecification("key3", SpecificationValue.AnyOf(1, 2, 3))),
