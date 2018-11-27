@@ -17,8 +17,15 @@
             SpecificationEvaluationSettings settings)
         {
             bool result = this.ApplyMultiplicity(
-                left.Values,
-                l => this.ApplyMultiplicity(right.Values, r => this.CompareSingleValues(l, r), right),
+                left.ValueType == SpecificationValue.DataType.DateTime
+                    ? left.Values.Select(this.HandleDateTimeUtc)
+                    : left.Values,
+                l => this.ApplyMultiplicity(
+                    right.ValueType == SpecificationValue.DataType.DateTime
+                        ? right.Values.Select(this.HandleDateTimeUtc)
+                        : right.Values,
+                    r => this.CompareSingleValues(l, r),
+                    right),
                 left);
 
             return SpecificationResult.Create(
@@ -40,6 +47,17 @@
             }
 
             throw new InvalidOperationException();
+        }
+
+        private object HandleDateTimeUtc(object value)
+        {
+            if (value is DateTime dt && dt.Kind != DateTimeKind.Utc)
+            {
+                DateTime utc = dt.ToUniversalTime();
+                return utc;
+            }
+
+            return value;
         }
 
         protected abstract bool CompareSingleValues(object l, object r);

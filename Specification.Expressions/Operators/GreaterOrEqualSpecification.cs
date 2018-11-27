@@ -1,5 +1,7 @@
 ﻿namespace Specification.Expressions.Operators
 {
+    using System;
+
     public class GreaterOrEqualSpecification : CompareSpecification
     {
         public GreaterOrEqualSpecification(string key, SpecificationValue value)
@@ -9,7 +11,10 @@
 
         protected override bool CompareSingleValues(object l, object r)
         {
-            throw new System.NotImplementedException();
+            IComparable cl = (IComparable)l;
+
+            double compareTo = cl.CompareTo(r);
+            return compareTo >= 0;
         }
 
         protected override string OperatorName => SpecAbsRes.GreaterOrEqualSpecificationName;
