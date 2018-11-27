@@ -1,6 +1,6 @@
 # Specification
 Filter data using specification expressions tree with following advantages:
-- ability load specification from xml. json format support comming soon.
+- ability to load specification from xml. json format support comming soon.
 - concept of "specification reference" and "value reference" to reuse already defined expressions in more complex ones.
 - comparison between single and multiple values
 - base visitors for efficien work with specification expressions tree
