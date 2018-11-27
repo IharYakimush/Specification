@@ -16,6 +16,7 @@
 - Visitors for efficien work with specification expressions tree</Description>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>.\..\sgn.snk</AssemblyOriginatorKeyFile>
+    <PackageTags>filter specification expression</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
